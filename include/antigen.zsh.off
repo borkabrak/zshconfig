@@ -1,0 +1,17 @@
+###############
+# ANTIGEN SETUP
+###############
+#
+#   Antigen is a plugin management system for zsh. It makes it easy to grab awesome
+#   shell scripts and utilities, put up on github. For further details and complete
+#   documentation, visit the project's page at 'http://antigen.sharats.me'.
+#   
+#   This file contains details of my ZSH configuration that are related to antigen.
+#
+#   Antigen can be retrieved from:
+#       https://github.com/zsh-users/antigen
+
+source "${component_dir}/antigen/antigen.zsh"
+
+# Command line, 'live' syntax highlighting (kind of like what fish/fizsh does)
+# antigen bundle zsh-users/zsh-syntax-highlighting

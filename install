@@ -1,0 +1,43 @@
+#!/usr/bin/zsh
+# Create ZSH config file in the current directory by linking to the files in
+# the 'include' directory of which this script is a part.
+#
+#   Assumptions: (getting rid of these assumptions is how development of this
+#   file should proceed).
+#
+#       * This repo has been cloned as ~/.zsh
+#
+#       * The current zsh config can be wiped out
+#
+###############################################################################
+# Set up / config
+###############################################################################
+# ZSH built-in config files
+zshfiles=(
+    zshenv
+    zshrc
+    zlogin
+)
+
+# Read current directory, into which to create links
+# (It may be alright just to assume '~' here.)
+sourcedir=$(dirname $0:A)
+###############################################################################
+
+print "Installing ZSH config files.."
+# read any zdotdir set by /etc/zshenv (the automatic sourcing of that file cannot be elided.)
+zdotdir=${ZDOTDIR-~}
+cd $zdotdir
+
+# Create ZSH config files by linking to the appropriate files in the repo
+print "Creating links $zdotdir -> $sourcedir.."
+for zshfile in $zshfiles; do
+    print "\t$zshfile.."
+
+    if [[ -f $sourcedir/$zshfile && ! -f $zdotdir/.$zshfile ]]; then
+        ln -s $sourcedir/$zshfile $zdotdir/.$zshfile
+    fi
+done
+
+source ~/.zshrc
+print "Done"

@@ -1,0 +1,21 @@
+ZSH-CONFIG
+==========
+
+Portable zsh configuration setup.  This repo contains dotfiles like .zshrc,
+.zshenv, etc., as well as a script to install them in a system.  
+
+Installation currently consists of creating symlinks from the user's home
+directory (or $ZSHDOTDIR, if set), into the repo files themselves.  This works
+better so long as this repo is for my personal use -- changing them *is* what
+I'm tracking.  
+
+If you want to use this for your own, different config, just fork the
+repository and go to town.
+
+
+TODO
+----
+
+    * Could this benefit from becoming an antigen package?  Antigen apparently
+      can pull in anything in a github repo, which this is, so..
+

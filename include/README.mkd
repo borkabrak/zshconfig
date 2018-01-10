@@ -1,0 +1,9 @@
+ZSH INCLUDE FILES
+=================
+
+When Zsh is run, all files will be sourced whose name matches the pattern
+`~/.zsh/include/*.zsh$`
+
+Naming a file accordingly will include it.  Nothing further needs to be done.
+
+The logic that implements this is in ~/.zsh/zshrc.
