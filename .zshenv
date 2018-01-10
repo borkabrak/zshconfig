@@ -1,10 +1,10 @@
 ########
 # ZSHENV
-########
+###########################################################################
 #
 #   Environment variables (often called 'params' in the zsh documentation.)
 #
-########
+###########################################################################
 
 # Set variables only on the first level of nested shells
 #   ( I'm not sure why, though, and I need $EDITOR within `screen` on Cygwin, so I'm disabling it until I find out.)
@@ -13,11 +13,7 @@
 # Add a bin in my home dir, for my own scripts
 PATH=$PATH:~/bin
 
-PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
 EDITOR=vim
-
-GOPATH=/home/jon/src/gocode
 
 PAGER=less
 
@@ -31,9 +27,10 @@ HISTFILE=~/.zsh/history
 HISTSIZE=1000
 
 # Number of history entries saved to the history file
-SAVEHIST=5000
+SAVEHIST=1000
 
 # Not sure this is necessary..
-export PATH EDITOR GOPATH PAGER HISTFILE HISTSIZE SAVEHIST
+export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST
 
 # fi
+
