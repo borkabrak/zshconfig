@@ -46,6 +46,7 @@
 ##################################################### 
 alias cp='cp -i' 
 alias grep='grep --color' 
+alias igrep='grep -i'
 alias less='less -iR' 
 alias a2r='sudo apache2ctl restart' 
 alias bc='bc -l' 
@@ -218,3 +219,13 @@ alias ff=rifle
 # List monospaced fonts installed on the system
 alias monofonts='fc-list :mono | cut -f 2 -d: | sort -u'
 
+# Run the last command again, running output through less
+#   NOTE:  The space before this command is INTENTIONAL, and elides adding the
+#   command to the history.  This is handy when repeating 'lass'.  Without the
+#   space, it reruns the last invocation of itself, which is generally not what
+#   we want.
+alias lass=' less =($(history -n -1))'
+
+#############################################
+#   console-based web search with Duckduckgo.
+alias ddg=www-browser "https://duckduckgo.com/?q=$1"
