@@ -182,7 +182,7 @@ function c() {
     
     # directory:
     if [[ -d $target ]]; then
-        ls -l --human-readable --color --size  $target
+        ls --indicator-style=classify --group-directories-first --human-readable --color --size  $target
        
         print
         # Show the first few lines of any readme files that happen to be in the
