@@ -158,50 +158,51 @@ function newsite() {
 
 }
 
-###################################################
-# c - for "see" - Automatically do what I want.
+#########################################################################
+# c - for "see" - Show any summary info possible for arbitrary expression
+#########################################################################
 #
 # Provide summary/descriptive information on things.  Try hard to be as
 # informative as possible with minimal instruction.
 #
 # TODO: 
-#   * Detect textfiles and cat them.  'file' on default.
 #   * Allow globs. (e.g. '*.jpg')
 #
 # -jdc 2014-12-04
 function c() {
 
-    # target is first argument (or current directory if no arg given)
+    # target is the first argument given.  Default to current directory.
     target=${@[1]-.}
 
     # Choose behavior based on what the given target *is*
     #   Possible types:
     #      * Directory - ls
-    #      * Filename - head
+    #      * Filename - ls; file; head
     #      * symlink - tracelink
     
-    # If target is a directory, show its contents
+    # directory:
     if [[ -d $target ]]; then
         ls -l --human-readable --color --size  $target
        
-        # Show the first few lines of any readme files
-        #   Match anything containing 'readme', with an optional single
-        #   character between the words.
+        # Show the first few lines of any readme files that happen to be in the
+        # directory.
         setopt EXTENDED_GLOB
         head -5 -v (#i)$target/*read?#me* 2>/dev/null
 
-    # If it's a symlink, show the link chain
+    # symlink:
     elif [[ -L $target ]]; then
+        # show the link chain
         tracelink $target;
 
-    # It's a regular file - 'file' it and show the first few lines
+    # regular file: 
     elif [[ -f $target ]]; then
         (ls -hl $target; file $target) | grep --color=always $target
         print
-        head $target
+        head $target | pygmentize
 
     else
-        # Anything else - use 'file' to see what it is.
+        # Anything else:
+        ls -l $target
         file $target
 
     fi
