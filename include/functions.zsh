@@ -196,8 +196,8 @@ function c() {
 
     # It's a regular file - 'file' it and show the first few lines
     elif [[ -f $target ]]; then
-        file $target
-        print '================'
+        (ls -hl $target; file $target) | grep --color=always $target
+        print
         head $target
 
     else
