@@ -184,6 +184,7 @@ function c() {
     if [[ -d $target ]]; then
         ls -l --human-readable --color --size  $target
        
+        print
         # Show the first few lines of any readme files that happen to be in the
         # directory.
         setopt EXTENDED_GLOB
