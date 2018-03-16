@@ -99,7 +99,7 @@ END
 
         # Pop back out to this target's directory, so that we end up where we
         # began.
-        popd -q
+        # popd -q
 
     fi
 
