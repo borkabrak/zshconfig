@@ -100,6 +100,7 @@ alias g=git
 alias hh=history
 alias lisp='clisp -q'
 alias ll='ls -l'
+alias la='ls -a'
 alias LL='ls -lL'
 alias l=ls
 alias L='ls -L'
@@ -200,6 +201,24 @@ alias mode='echo "vol:$(vol)\nbrightness: $(dim)"'
 #
 #alias whatmode=mode
 #alias what-mode=mode
+
+# VOLUME
+########
+
+# NOTE: amixer does provide a 'mute/unmute' operation pair, but they don't seem
+# to exactly counter each other.  I think it's likely that they operate on
+# something more specific than 'Master'.  However, I think setting 'Master'
+# explicitly to 0/100% is a better choice for a portable way to express the
+# intent, and more likely to work for more environments.  (Though this does
+# mean that 'unmute' sets the volume to max -- not necessarily what it was
+# before.  C'est la guerre.
+alias mute='amixer set Master 0' alias unmute='amixer set Master 100%'
+
+alias hush='amixer set Master 0'
+alias shutup='amixer set Master 0'
+alias quiet='amixer set Master 0'
+alias silence='amixer set Master 0'
+alias loud='amixer set Master 100%'
 
 # playing around with the session manager plugin for vim
 alias vims=vim -c SessionList
