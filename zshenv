@@ -13,6 +13,13 @@
 # Add a bin in my home dir, for my own scripts
 PATH=$PATH:~/bin
 
+# Add composer stuff to path
+PATH=$PATH:~/.config/composer/vendor/bin
+
+# Where my Go code lives
+GOPATH=~/gocode
+PATH=$PATH:~/gocode/bin
+
 EDITOR=vim
 
 PAGER=less
@@ -30,7 +37,7 @@ HISTSIZE=1000
 SAVEHIST=1000
 
 # Not sure this is necessary..
-export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST
+export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST GOPATH
 
 # fi
 
