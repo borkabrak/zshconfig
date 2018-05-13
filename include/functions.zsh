@@ -9,7 +9,7 @@ autoload zmv zcp zln
 # Clone a github repository by name alone (in the form 'user/repository')
 function ghub() { git clone https://github.com/$1.git }
 
-# Automatically switch to a newly created directory
+# Create a new directory and automatically cd into it.
 # (cf. `mkdir -p`)
 function makedir() {
     if [[ ! -e $1 ]]; then
@@ -30,6 +30,75 @@ function timer(){
     sleep $seconds_in_a_minute;
   }
   sfx warble;
+}
+
+function countdown() {
+
+  # Reset to expected value, in case it's been used elsewhere
+  OPTIND=1
+
+  # Set command default
+  command=(/home/jon/bin/sfx warble)
+
+  function usage() {
+      print """
+          USAGE
+              $1 [ -h ] [ -m ] [ -c COMMAND ] duration
+
+          DESCRIPTION
+              Count down a given amount of time, then execute a command.
+
+          OPTIONS
+
+              -h Print usage and exit.
+
+              -m Interpret duration as minutes instead of seconds.
+
+              -c command
+                Command to execute.  Defaults to \`$command\`
+        """
+  }
+
+  # Parse options
+  while getopts "hmc:d" OPT; do
+
+    case $OPT in 
+
+      h) 
+        usage $0 && return
+        ;;
+
+      m)
+        use_minutes=true
+        ;;
+
+      c)
+        command=(${=OPTARG})
+        ;;
+
+      d)
+        debug=true
+        ;;
+
+    esac
+
+  done
+  
+  # Validate input
+  duration=$@[$#]
+  if ! [[ $duration =~ '^[0-9]+$' ]]; then
+    print "'$duration' is not an integer. The countdown duration must be the last argument given"
+    return
+  fi
+
+  if [[ $use_minutes ]]; then
+    # Duration is in minutes, so convert it to seconds
+    duration=$(( 60 * duration ))
+  fi
+
+  # Execute
+  sleep $duration && "$command[@]"
+
 }
 
 # For debugging.  Practice parsing options
