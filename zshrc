@@ -1,40 +1,55 @@
 ################################################################################
 # ZSHRC - Z-shell Runtime Configuration
+#
+#   TL;DR: 
+#
+#     # ZSH config files are symlinks into this git repository.
+#
+#         This ZSH config setup is different than most.  Here's what's going on:
+#         
+#         Everything pertaining to ZSH configuration is in a git repository.  
+#         
+#         The repository also includes a script to 'install' the files, which works
+#         by creating symlinks in the user's home directory (or $ZSHDOTDIR, if set).
+#         These links point to the files in the repository, so updating the repo
+#         automatically provides new shells with the new configuration.
+#
+#
+#     # This zshrc sources all the actual configuration commands from `include/*.zsh`
+#
+#         This .zshrc file is split into individual component files for various things
+#         such as options, aliases, etc.
+#      
+#         TODO:
+#         ---------
+#         * Checkout out 'zgen' instead of antigen:
+#             It looks to have some very real advantages.
+#      
+#                https://github.com/tarjoilija/zgen
+#
+#
 ################################################################################
 #
-#   This ZSH config setup is different than most.  Here's what's going on:
+#--------------------------------------------------------------------------------
 #
-#   Everything pertaining to ZSH configuration is in ~/.zsh/include
-#
-################################################################################
 # ZSHRC COMPONENTS
 # ----------------
 #
-#   This .zshrc file is split into individual component files for various things
-#   such as options, aliases, etc.
-#
-#   To install a component, put it in the appropriate directory with an
-#   extension of *.zsh
-#
-#   I haven't run into a situation yet where order matters, but such is
-#   conceivable.  If so, try numbering them in the order in which they should
-#   be sourced.
-#
-#   TODO:
-#   ---------
-#   * Checkout out 'zgen' (or antigen):
-#          https://github.com/tarjoilija/zgen
-#
-################################################################################
 
-# Any files in this directory that have an extension of '.zsh' will be sourced.
+# I have a directory containing everything I want to source.  This
+# allows installation to be as easy as just putting the file in that
+# directory, instead of trying to manage a large amount of data in a single file.
+#
+# This will source all files in the specified 'components directory' that have
+# an extension of '*.zsh'.  It outputs file names as they are sourced.
 components_directory="$HOME/.zsh/include"
 
 autoload colors && colors
-print -n "$fg_bold[white]Sourcing components_directory.."
+
+print -n "$fg_bold[white]Sourcing ZSH config components from $components_directory..\n\t$fg[cyan]"
 for component in $(ls $components_directory/*.zsh); do
     name=$(basename $component)
     print -n " $name"
     source $component
 done
-print
+print # Add a newline when done
