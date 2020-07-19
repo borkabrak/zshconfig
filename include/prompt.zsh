@@ -14,9 +14,9 @@
 #		(The above is not _exactly_ how it works, but is accurate enough for here)
 #
 #	-Be warned: The shell seems to consider the color escape characters when calculating the length
-  #		of the prompt.
+#		of the prompt.
 #		This will make the cursor do some crazy things in some situations, especially upon completion
-  #		attempts.
+#		attempts.
 #		To avoid this, surround the entire color escape sequence above (from the slash to the m) with
 #		curly braces.
 #		BUT, to make sure those curly braces are not printed literally by the shell, preface
@@ -27,7 +27,7 @@
 #
 #Also, while an argument can be made that as an environment variable, PROMPT belongs in .zshenv,
 # I can't think of a case in which a non-interactive shell would need a prompt.
-  # (More info on ANSI escape sequences: http://en.wikipedia.org/wiki/ANSI_escape_code )
+# (More info on ANSI escape sequences: http://en.wikipedia.org/wiki/ANSI_escape_code )
 
 #This uncolored prompt looks like:
 #	'[user@host]~> '

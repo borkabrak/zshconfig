@@ -6,20 +6,17 @@
 #
 ###########################################################################
 
-# Set variables only on the first level of nested shells
-#   ( I'm not sure why, though, and I need $EDITOR within `screen` on Cygwin, so I'm disabling it until I find out.)
-# if [[ $SHLVL == 1 ]]; then
-
 # Add a bin in my home dir, for my own scripts
 PATH=$PATH:~/bin
 
-# Add composer stuff to path
-PATH=$PATH:~/.config/composer/vendor/bin
-
-# Where my Go code lives
-GOPATH=~/gocode
-PATH=$PATH:~/gocode/bin
-
+# The EDITOR param can have non-obvious consequences.  From the KEYMAPS section
+# of `man zshzle`, when discussing the default keymap:
+#
+#   In addition to these names, either `emacs' or `viins' is also linked to
+#   the name `main'.  If one of the VISUAL or EDITOR  environment variables
+#   contain the string `vi' when the shell starts up then it will be
+#   `viins', otherwise it will be `emacs'.  bindkey's -e and -v options
+#   provide a convenient way to override this default choice.
 EDITOR=vim
 
 PAGER=less
@@ -33,11 +30,24 @@ HISTFILE=~/.zsh/history
 # Number of history entries tracked internally, in memory.
 HISTSIZE=1000
 
-# Number of history entries saved to the history file
+# Number of history entries saved to the history file when exiting the shell.
 SAVEHIST=1000
 
-# Not sure this is necessary..
-export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST GOPATH
+# A note on the export command:
+#
+#   From `man zshbuiltins`:
+#
+#     export [ name[=value] ... ]
+#       The specified names are marked for automatic export to the environment of
+#       subsequently executed  commands.  Equivalent  to  typeset -gx.  If a
+#       parameter specified does not already exist, it is created in the global
+#       scope.
+#   
+#   So you should export anything that a later command might need.  For
+#   example, EDITOR has consequences affecting the default keymap for the
+#   command line editor.
+#   
+export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST 
 
-# fi
-
+# Sometimes I want to print a horizontal bar
+hr="=============================================================================="

@@ -6,12 +6,14 @@
 # mv, cp, ln on multiple files at once
 autoload zmv zcp zln
 
+function ghub() { 
 # Clone a github repository by name alone (in the form 'user/repository')
-function ghub() { git clone https://github.com/$1.git }
+  git clone https://github.com/$1.git 
+}
 
+function makedir() {
 # Create a new directory and automatically cd into it.
 # (cf. `mkdir -p`)
-function makedir() {
     if [[ ! -e $1 ]]; then
         mkdir -p $1
     fi
@@ -20,8 +22,8 @@ function makedir() {
 
 alias makdir=makedir
 
-# Wait <n> seconds and sound an alert noise.  Regularly report time left.
 function timer(){
+# Wait <n> seconds and sound an alert noise.  Regularly report time left.
 
   if [[ $@ = 0 ]]; then echo "$ timer <minutes>"; return 1; fi
   for i in $(seq 1 $1 ); {
@@ -101,8 +103,9 @@ function countdown() {
 
 }
 
-# For debugging.  Practice parsing options
 function parseopts() {
+# For debugging.  Practice parsing options
+
     print "==[ $(date) ]=="
     typeset -a opts;
     zparseopts -a opts h v;
@@ -119,8 +122,8 @@ function parseopts() {
     return $opts
 }
 
-# Show each step in a chain of symbolic links
 function tracelink() {
+# Show each step in a chain of symbolic links
 
     # With no args, just show usage
     if [[ ! $# > 0 ]]; then
@@ -195,8 +198,8 @@ USAGE
 
 }
 
-# Carry out the shell-level operations common to setting up most websites.
 function newsite() {
+# Carry out the shell-level operations common to setting up most websites.
 
     # !!! NOT YET TESTED !!!
     echo "NOT YET TESTED" && return 1
@@ -227,6 +230,7 @@ function newsite() {
 
 }
 
+function c() {
 #########################################################################
 # c - for "see" - Show any summary info possible for arbitrary expression
 #########################################################################
@@ -238,7 +242,6 @@ function newsite() {
 #   * Allow globs. (e.g. '*.jpg')
 #
 # -jdc 2014-12-04
-function c() {
 
     # target is the first argument given.  Default to current directory.
     target=${@[1]-.}
@@ -279,9 +282,35 @@ function c() {
 
 }
 
-# Return arg, stripped of anything that makes it not an integer
 function parseInt() {
+# Return arg, stripped of anything that makes it not an integer
+
     arg=($1 or read)
     grep -o '[0-9]\+' =(echo $1) | head -1
 }
 
+function queryproc() {
+# Show all processes matching a string, and a summary count at the end.
+# Seems awfully specific, but I keep finding myself doing it, so..
+#	Example:
+#		$ queryproc steam			# show all steam processes, with a count of how many there are.
+
+	pgrep -fa $1
+	print "$hr\n'$1' procs: $(pgrep -fa $1 | wc -l)"
+}
+
+function rand() {
+# Print a random number between 0 and a given param (minus one)
+# If no param is given, then just print $RANDOM
+
+  #cf: `man zshparam /RANDOM`, `man zshexpn /PARAMETER EXPANSION`
+  retval=$RANDOM
+  if [[ $1 ]]; then retval=$(( $RANDOM % $1 )) fi
+  print $retval
+}
+
+function hotrod() {
+# Output brief info on the process currently using the most CPU
+
+  top -bn 1 -o -'%CPU' | tail -1 | awk '{ print $NF,$1,$9 }'
+}

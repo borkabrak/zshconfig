@@ -27,10 +27,10 @@
 ######################################
 # USEFUL TIP: Ignoring aliased command
 ######################################
-# If an alias turns out to be in the way for any reason, there are a couple
-# different ways to run the command using the unaliased, 'factory standard'
-# version of it (i.e., ignoring any 'alias' commands that may have been
-# executed):
+# If an alias turns out to be in the way for any reason, there are at least a
+# couple different ways to run the command using the unaliased, 'factory
+# standard' version of it (i.e., ignoring any 'alias' commands that may have
+# been executed):
 #
 #   Both of these methods will run the 'real' version of <command>, ignoring
 #   any attempts that may have been tried to alias it to something else:
@@ -65,22 +65,15 @@ alias tree='tree -C'
 # Running commands to xargs with nothing on STDIN:  not even once. :-D
 alias xargs='xargs -r'
 
-# curl options
-#   As with all these aliases, to use the 'bare' form with no options, try:
+alias curl='curl -L -O'
+#   -L: If a url responds with a 3xx 'Moved' status, this option automatically
+#   retries the download from the new location.
 #
+#   -O: Write output to a local file named similarly to the url.  (Instead of
+#   the default writing to STDOUT.)
+#
+#   To use the 'bare' form of curl with no options, try:
 #       $ env curl
-#
-##############
-#
-#   -L
-#       If a url responds with a 3xx 'Moved' status, this options automatically
-#       retries the download from the new location.
-#
-#   -O
-#       Write output to a local file named similarly to the url.  (Instead of
-#       the default writing to STDOUT.)
-
-# alias curl='curl -L -O'
 
 #####################################################
 # FOR FUN
@@ -104,17 +97,20 @@ alias la='ls -a'
 alias LL='ls -lL'
 alias l=ls
 alias L='ls -L'
-alias lsdirs='ls -d */'
+alias lsdirs='ls -d */' # List only directories
 alias lsd=lsdirs
+alias named_directories='hash -d'  #List named directories
 alias open=xdg-open
 alias readme='vim README.mkd'
-alias revim='vim -c ''source ~/.vim/shutdown_session.vim'''
-alias regvim='gvim -c ''source ~/.vim/shutdown_session.vim'''
+alias revim='vim -c "source ~/.vim/shutdown_session.vim"'
+alias regvim='gvim -c "source ~/.vim/shutdown_session.vim"'
 alias grevim=regvim
+alias vv='revim'
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 alias rtfm=man
 alias sassify='sass --watch --sourcemap=none --scss'
 alias t=task
+alias tt=task
 alias whatprovides='apt-file search -x'
 alias which-command=whence
 
@@ -225,7 +221,6 @@ alias vims=vim -c SessionList
 alias gvims=gvim -c SessionList
 
 # Abbreviations
-alias f=file
 alias qq=quietus
 
 alias nvim-log="NVIM_PYTHON_LOG_FILE=~/.vim/nvim-python-log-file.txt nvim"
@@ -236,15 +231,28 @@ alias rr=ranger
 alias ff=rifle
 
 # List monospaced fonts installed on the system
-alias monofonts='fc-list :mono | cut -f 2 -d: | sort -u'
+alias monofonts='fc-list :mono family'
 
 # Run the last command again, running output through less
-#   NOTE:  The space before this command is INTENTIONAL, and elides adding the
-#   command to the history.  This is handy when repeating 'lass'.  Without the
-#   space, it reruns the last invocation of itself, which is generally not what
+#   NOTE:  The space before this command is INTENTIONAL, and zsh understands it
+#   as meaning it should elide adding the command to the history.  This is
+#   handy when repeating 'lass'.  Without the space, it reruns the last
+#   invocation of itself, which is generally not what
 #   we want.
 alias lass=' less =($(history -n -1))'
 
 #############################################
 #   console-based web search with Duckduckgo.
-alias ddg=www-browser "https://duckduckgo.com/?q=$1"
+alias ddg='www-browser "https://duckduckgo.com/?q=$1"'
+
+# Display a random article from wikipedia in a console-based browser
+alias random-wikipedia-article='www-browser ''https://en.wikipedia.org/wiki/Special:Random'' '
+
+# Just so I don't have to look up the particular characters for this one.
+alias shrug="echo '¯\_(ツ)_/¯'"
+
+# Gotta do something weird to run System Shock 2..
+alias shock="cd ~/.local/share/Steam/steamapps/common/SS2/support/systemshock2/drive_c/Program\ Files/SystemShock2/ && wine Shock2.exe"
+
+# Maybe there's a better way, but for now..
+alias lua="lua5.3"

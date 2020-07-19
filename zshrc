@@ -1,8 +1,6 @@
 ################################################################################
 # ZSHRC - Z-shell Runtime Configuration
 #
-#   TL;DR: 
-#
 #     # ZSH config files are symlinks into this git repository.
 #
 #         This ZSH config setup is different than most.  Here's what's going on:
@@ -36,20 +34,18 @@
 # ----------------
 #
 
-# I have a directory containing everything I want to source.  This
-# allows installation to be as easy as just putting the file in that
-# directory, instead of trying to manage a large amount of data in a single file.
+# To add a new file, just put it in the components directory and give it a
+# *.zsh extension.  No editing of anything else is required.
 #
-# This will source all files in the specified 'components directory' that have
-# an extension of '*.zsh'.  It outputs file names as they are sourced.
+# This file just loads all the other files in the components directory that
+# have an extension of '*.zsh'.
 components_directory="$HOME/.zsh/include"
 
 autoload colors && colors
-
 print -n "$fg_bold[white]Sourcing ZSH config components from $components_directory..\n\t$fg[cyan]"
 for component in $(ls $components_directory/*.zsh); do
     name=$(basename $component)
     print -n " $name"
     source $component
 done
-print # Add a newline when done
+print
