@@ -59,3 +59,6 @@ bindkey -s '\er' '\e0Diranger^M'
 # Alt-z sources .[Z]shrc
 bindkey -s '\ez' '\e0Disource ~/.zshrc^M'
 
+# Alt-> inserts the last argument of the previous command
+bindkey '\e>' insert-last-word
+
