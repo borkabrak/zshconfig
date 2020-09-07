@@ -177,27 +177,6 @@ END
 
 }
 
-# Show info about commands
-function wh() {
-
-    if (( $# < 1 )); then
-        cat <<-USAGE
-        $0 - Show info about commands
-
-            $ $0 [<options>] <command>
-
-        By default, show info about all commands that begin with <command>.
-        This function accepts additional options to whence. (man zshbuiltins)
-            -jdc, 2015-12
-
-USAGE
-        return 1
-    fi
-
-    whence -sam "$@"
-
-}
-
 function newsite() {
 # Carry out the shell-level operations common to setting up most websites.
 
