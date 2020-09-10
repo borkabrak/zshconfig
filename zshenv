@@ -17,6 +17,10 @@ PATH=$PATH:~/bin
 #   contain the string `vi' when the shell starts up then it will be
 #   `viins', otherwise it will be `emacs'.  bindkey's -e and -v options
 #   provide a convenient way to override this default choice.
+#
+# In other words, if the EDITOR (or VISUAL) enviroment variables has 'vi' in
+# it, the zsh command line will automatically be in vi mode.  Neat, but it's
+# not great that it's unexpected.
 EDITOR=vim
 
 PAGER=less
@@ -43,9 +47,9 @@ SAVEHIST=1000
 #       parameter specified does not already exist, it is created in the global
 #       scope.
 #   
-#   So you should export anything that a later command might need.  For
-#   example, EDITOR has consequences affecting the default keymap for the
-#   command line editor.
+#   So you should export, not everything, but anything that a later command
+#   might need in *it's* environment.  For example, EDITOR has consequences
+#   affecting the default keymap for the command line editor.
 #   
 export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST 
 
