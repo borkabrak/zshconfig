@@ -25,15 +25,16 @@
 ########################################################################################################
 
 ######################################
-# USEFUL TIP: Ignoring aliased command
+# USEFUL TIP: Ignoring aliases
 ######################################
 # If an alias turns out to be in the way for any reason, there are at least a
 # couple different ways to run the command using the unaliased, 'factory
 # standard' version of it (i.e., ignoring any 'alias' commands that may have
 # been executed):
 #
-#   Both of these methods will run the 'real' version of <command>, ignoring
-#   any attempts that may have been tried to alias it to something else:
+#   Both of these methods will run the 'real' (unaliased, as-installed) version
+#   of <command>, ignoring any attempts that may have been tried to alias it to
+#   something else:
 #
 #   $ /usr/bin/<command>      # Access the command via the full path to it
 #
@@ -83,14 +84,16 @@ alias dammit,=sudo
 alias please=sudo
 alias xyzzy='echo Nothing happens'
 
-#####################################################
+##############################################################################
 # NEW COMMANDS - (i.e., the LHS didn't exist before alias is parsed)
-#####################################################
+#
+#   Ideally, I'd like to be an alphabetically sorted list of all such commands
+##############################################################################
 alias datestamp='date +%F'
 alias v=vim
 alias gg='git status -sb'
 alias g=git
-alias hh=history
+alias hh='fc -li 0' #full history, with extra info.  `fc` is worth reading about in `man zshbuiltins`
 alias lisp='clisp -q'
 alias ll='ls -l'
 alias la='ls -a'
@@ -111,19 +114,15 @@ alias rtfm=man
 alias sassify='sass --watch --sourcemap=none --scss'
 alias t=task
 alias tt=task
+alias ucode='unicode --max 0 --brief'  # `unicode` - no limit on answers returned, one line each. 
 alias whatprovides='apt-file search -x'
 alias which-command=whence
+alias x=exit  # So far I've only run this accidentally just a few times.
+
 
 # Work around a common typo
 alias cd..='cd ..'
 
-# So far I've only run this accidentally just a few times.
-alias x=exit
-
-# Print command history with extra info: date, time, and time elapsed since
-# prior command.  `fc` can actually do quite a lot with the history,
-# apparently.  Search for ' fc ' in `man zshbuiltins` for more info.
-alias historyfull='fc -liD'
 
 # Show path, one per line
 alias path='foreach p in $path; { print $p }'
@@ -149,21 +148,28 @@ alias calc='autoload zcalc && zcalc'
 
 # From `man zshbuiltins`:
 #
-# If the -s flags is present, define a suffix alias: if the command word on a
-# command line is in the form `text.name', where text is any non-empty string,
-# it is  replaced  by the text `value text.name'.  Note that name is treated as
-# a literal string, not a pattern.  A trailing space in value is not special in
-# this case.  For example,
+#     If the -s flags is present, define a suffix alias: if the command word on a
+#     command line is in the form `text.name', where text is any non-empty string,
+#     it is  replaced  by the text `value text.name'.  Note that name is treated as
+#     a literal string, not a pattern.  A trailing space in value is not special in
+#     this case.  For example,
 #
-#       alias -s ps=gv
+#           alias -s ps=gv
 #
-# will cause the command `*.ps' to be expanded to `gv *.ps'.
+#     will cause the command `*.ps' to be expanded to `gv *.ps'.
+#
+# (In other words, it causes the 'gv' program to be used automatically when you
+# try to execute a postscript file.  The file does not need to be made
+# executable.)
 #
 # typescript
 alias -s ts=tsc
 # javascript
 alias -s js=nodejs
+# PDFs
+alias -s pdf=xreader
 
+# hacker news
 alias hn="www-browser 'http://news.ycombinator.com'"
 
 # "Stealth mode" :)  - dim and quiet
@@ -234,11 +240,10 @@ alias ff=rifle
 alias monofonts='fc-list :mono family'
 
 # Run the last command again, running output through less
-#   NOTE:  The space before this command is INTENTIONAL, and zsh understands it
-#   as meaning it should elide adding the command to the history.  This is
-#   handy when repeating 'lass'.  Without the space, it reruns the last
-#   invocation of itself, which is generally not what
-#   we want.
+#   NOTE:  The space before this command causes zsh to elide adding the command
+#   to the history.  This is handy when repeating 'lass'.  Without the space,
+#   it reruns the last invocation of itself, which is generally not what we
+#   want.
 alias lass=' less =($(history -n -1))'
 
 #############################################
@@ -249,6 +254,7 @@ alias ddg='www-browser "https://duckduckgo.com/?q=$1"'
 alias random-wikipedia-article='www-browser ''https://en.wikipedia.org/wiki/Special:Random'' '
 
 # Just so I don't have to look up the particular characters for this one.
+#   (It seems as though there should be some sort of digraph-like functionality to do this in vim.)
 alias shrug="echo '¯\_(ツ)_/¯'"
 
 # Gotta do something weird to run System Shock 2..
@@ -256,3 +262,13 @@ alias shock="cd ~/.local/share/Steam/steamapps/common/SS2/support/systemshock2/d
 
 # Maybe there's a better way, but for now..
 alias lua="lua5.3"
+
+# suspend to memory 
+alias suspend-to-memory="xfce4-session-logout --suspend"
+alias stm=suspend-to-memory
+alias shh=suspend-to-memory
+alias sleepytime=suspend-to-memory
+alias goodnight=suspend-to-memory
+
+alias say='print'
+alias p='print'
