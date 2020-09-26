@@ -1,63 +1,70 @@
 # vim:ft=zsh
-# Zsh prompt definition
-#Alright, there's a lot going on with prompt colors in zsh.  Quick and dirty course:
 #
-#	-Color sequences are enabled in a string by quoting the whole thing in the dollar-quote ($'') construct.
+# ==============================================================================
+# SETTING THE ZSH PROMPT
+# ==============================================================================
+# • Prompt sequences have some special expansion rules that allow for things
+# like colored text and pre-set variables.  You can read all about the details
+# by searching for EXPANSION OF PROMPT SEQUENCES in `man zshmisc`.  You can get
+# the `print` command to use these special rules as well by giving it the -P
+# option.  (get colors without autoload!)  `echo` won't do that, if you're
+# looking for differences.
 #
-#	-A color is 'turned on' with the sequence:
+# • Dynamic information in the prompt (stuff that may change in between
+# displays of the prompt.  i.e., time.) can be done with the special hook
+# function 'precmd()'.  ZSH also provides an array, 'psvar', that can be used
+# to set the prompt dynamically.  
+##############################################################################
+# 
+#-------------------------------------------------------------------------------------
+# SPECIAL EFFECTS POSSIBLE WITH PROMPT EXPANSION:
+#-------------------------------------------------------------------------------------
+# %F{color}     Foreground color
+# %K{color}     Background color
+# %B            Bold
+# %U            Underline
+# %S            Standout (reverse fore- and background colors)
+#-------------------------------------------------------------------------------------
+# Here's a handy function to show what color is produced by each number:
 #
-#		\e[x;yym
-#
-#	 	where 'x' is a modifier (1 means 'bright' or 'bold', while '0' means normal)
-#	 	and 'yy' is a color code (31 is red, 32 is green, and 34 is blue, for example)
-#		and the 'm' is a literal character 'm'.
-#		(The above is not _exactly_ how it works, but is accurate enough for here)
-#
-#	-Be warned: The shell seems to consider the color escape characters when calculating the length
-#		of the prompt.
-#		This will make the cursor do some crazy things in some situations, especially upon completion
-#		attempts.
-#		To avoid this, surround the entire color escape sequence above (from the slash to the m) with
-#		curly braces.
-#		BUT, to make sure those curly braces are not printed literally by the shell, preface
-#		each one with zsh's escape character, '%'
-#
-#		Like this:
-#			%{<color escape>%}
-#
-#Also, while an argument can be made that as an environment variable, PROMPT belongs in .zshenv,
-# I can't think of a case in which a non-interactive shell would need a prompt.
-# (More info on ANSI escape sequences: http://en.wikipedia.org/wiki/ANSI_escape_code )
+# function showcolors {
+#   for i in {0..255}; {
+#     print -P "%F{$i}This is color $i."
+#   } | less -R
+# }
 
-#This uncolored prompt looks like:
-#	'[user@host]~> '
-#PROMPT=$'[%n@%m]%~> '
+# I've broken different parts down into pieces to try to make futzing around
+# with it easier:
+#-------------------------------------------------------------------------------------
+               user="%F{ 10}%n%f"
+                 at="%F{ 87}@%f"
+               host="%F{141}%m%f"
+                sep="%F{ 87}:%f"
+  current_directory="%F{ 12}%~%f"
+              arrow="%F{ 13}➤%f"
+#-------------------------------------------------------------------------------------
+PROMPT="${user}${at}${host}${sep}${current_directory}${arrow} "
 
-#This prompt looks like:
-#
-#	'[user@host]~> '
-#
-#	but with some groovy colors setting elements apart
-#
-#PROMPT=$'%{\e[0;32m%}[%n@%{\e[1;31m%}%m%{\e[0;32m%}]%{\e[1;34m%}%~%{\e[1;32m%}>%{\e[0m%}'
 
-#Super psycho sexy prompt developed by a shadowy clan of NASA-trained space monkeys:
-#PROMPT=$'%{\e[0;32m%}[%{\e[1;32m%}%n@%{\e[1;31m%}%m%{\e[1;32m%}:zsh(%?)%{\e[1;32m%}]%{\e[0;34m%}%~%{\e[1;32m%}> %{\e[0m%}'
-#PROMPT=$'%{\e[1;32m%}[%{\e[1;32m%}%n@%{\e[1;34m%}%m%{\e[1;32m%}:zsh(%?)%{\e[1;32m%}]%{\e[1;34m%}%~%{\e[1;32m%}> %{\e[0m%}'
+# Print a symbol to represent the state of power to the system
+function power_state_symbol() {
+  if [[ $(acpi -a) =~ "on-line" ]] { 
+    print "%F{10}🔌%f"  # Power adapter is plugged in
+    } else { 
+    print "%F{11}🗲%f"   # Otherwise, it must be discharging
+  }
+}
 
-#==============================================================================
-autoload -U colors && colors
-#PROMPT=$'%{\e[1;32m%}%n@%{\e[38;5;129m%}%m%{\e[m%}:%{\e[1;34m%}%~%{\e[m%}%{\e[1;35m%}»%{\e[0m%} '
-#PROMPT=$'%{\e[1;32m%}%n@%{\e[38;5;129m%}%m%{\e[m%}:%{\e[1;34m%}%~%{\e[m%}%{\e[1;35m%}≫ %{\e[0m%} '
-#PROMPT=$'%{\e[1;32m%}%n@%{\e[38;5;129m%}%m%{\e[m%}:%{\e[1;34m%}%~%{\e[m%}%{\e[1;35m%}›%{\e[0m%} '
-#PROMPT=$'%{\e[1;32m%}%n@%{\e[38;5;21m%}%m%{\e[m%}:%{\e[1;34m%}%~%{\e[m%}%{\e[1;35m%}⇒%{\e[0m%} '
-PROMPT=$'%{\e[1;32m%}%n@%{\e[38;5;21m%}%m%{\e[m%}:%{\e[1;34m%}%~%{\e[m%}%{\e[1;35m%}➤%{\e[0m%} '
 
-# This one uses nicer color specifications, but seems to mess up spacing somehow (try 'ls <tab>')
-# Apparently you should wrap the colors in %{ [...] %}, according to:
-#
-#   https://wiki.archlinux.org/index.php/Zsh#Colors
-#
-#PROMPT="$fg_bold[cyan]%n$fg[green]@$fg[red]%m$reset_color:$fg_bold[green]%~$fg[magenta]$reset_color> "
-#❱
-export PROMPT
+# precmd(): A special function that ZSH runs automatically before each display
+# of the prompt.
+function precmd() {
+
+  time="%S%F{141}$(date +'%l:%M%p')%s%f"
+  battery="%F{10}$(battery-percent)%%%f$(power_state_symbol)"
+      tty="%F{ 87}tty$(tty | env grep -o '[0-9]')%f"
+
+  # ZSH lets you have a 'right prompt', which sits on the far right side of the
+  # command line.  
+  RPROMPT="${battery} ${tty} ${time}"
+}

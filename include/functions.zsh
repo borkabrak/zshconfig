@@ -293,3 +293,48 @@ function hotrod() {
 
   top -bn 1 -o -'%CPU' | tail -1 | awk '{ print $NF,$1,$9 }'
 }
+
+
+# Print a compact table of which numbers produce which colors.
+# This is helpful for using prompt-style color output a la:
+#     %F{color/number}colored text%f
+function colortable {
+
+  separator=" "   # Options: │, |
+
+  # Using 36 entries per line (with a small enough font to get a whole row on
+  # the screen) shows an effect I don't quite understand.  Like particular hues
+  # lining up.  Must have something to do with how the list was originally
+  # determined.  But what, exactly?
+  entries_per_line=16   
+
+  # Use this to adjust the width of the column automatically to the width of
+  # the screen.
+  #
+  # entries_per_line=$(( $COLUMNS / 4 ))    
+
+  for n in {0..255}; {
+
+    # Add leading zeros so everything lines up
+    num=$(printf %0.3i $n)  
+
+    # output
+    print -Pn "${separator}%F{$n}${num}%f" 
+
+    # add a new line every so many entries
+    if [[ $(( ( n + 1 ) % $entries_per_line )) -eq 0 ]] { 
+      print -n "${separator}\n" 
+    }
+
+  }
+
+}
+
+# Print a sizeable bit of text showing number/color correspondence
+function colorlist {
+  for i in {0..255}; {
+    print -P "%F{$i}This is color $i."
+  } | less -R
+}
+
+

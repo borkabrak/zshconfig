@@ -25,6 +25,24 @@ EDITOR=vim
 
 PAGER=less
 
+# Odd mystery around setting TERM here...
+#
+# When running gnome-terminal, the value of TERM is 'xterm-256color'.  And
+# 'echoti colors' reports that the terminal does, indeed, support 256 colors.
+#
+# However, upon running tmux from within gnome-terminal, the value of TERM
+# seems to revert to 'screen', which prevents us from supporting more than 8
+# colors.  
+#
+# Testing color output with the escape-sequence style, '\e[38;5;number',
+# demonstrates 256 color support, even within tmux, and echoti reporting 8 colors.
+#
+# But trying to use the simpler prompt-style color designators, a la '%F{number}',
+# seems to require 'echoti colors' to report 256.  Setting TERM here makes that happen.
+#
+# So, while setting this here seems to fix the issue, it all feels a touch hacky.. 
+TERM=xterm-256color
+
 # HISTORY
 #   Note that history tracking is NOT the default.  Some options/params must be set first.
 
@@ -36,6 +54,9 @@ HISTSIZE=1000
 
 # Number of history entries saved to the history file when exiting the shell.
 SAVEHIST=1000
+
+# Sometimes I want to print a horizontal bar
+hr="=============================================================================="
 
 # A note on the export command:
 #
@@ -51,7 +72,4 @@ SAVEHIST=1000
 #   might need in *it's* environment.  For example, EDITOR has consequences
 #   affecting the default keymap for the command line editor.
 #   
-export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST 
-
-# Sometimes I want to print a horizontal bar
-hr="=============================================================================="
+export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST TERM

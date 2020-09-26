@@ -16,17 +16,19 @@
 #       directory.  Make sure it has a *.zsh extension, and you're done.
 #
 #       You might see files in the components directory with extensions like
-#       '*.inactive'.  This is just a convenient way to turn a whole swath of
-#       config on and off.  If they don't end with *.zsh, they're ignored.
+#       '*.inactive'.  This is just a convenient way to "turn off" a whole
+#       file.  If it doesn't end with *.zsh, it's ignored.
 #
 ################################################################################
 
 components_directory="$HOME/.zsh/include"
 
-print -Pn "%F{white}Sourcing ZSH config components from $components_directory..\n\t%F{cyan}"
+print -Pn """%F{green}⦗%f %F{magenta}$(tty)%f %F{green}⦘%f
+%F{white}Loading ZSH config components from $components_directory..
+"""
 for component in $(ls $components_directory/*.zsh); do
     name=$(basename $component)
-    print -n " $name"
+    print -Pn " %F{cyan}$name%f"
     source $component
 done
 print

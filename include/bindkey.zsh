@@ -3,6 +3,7 @@
 #
 #   ZSH key bindings
 #
+# TODO: Add an easier way to paste from the system clipboard than shift-insert
 
 # Use Alt-Enter to insert a literal newline (It may be worth mentioning here
 # that even without this, you can use the 'o' command in vi mode to insert

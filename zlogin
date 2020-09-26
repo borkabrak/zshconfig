@@ -1,2 +1,6 @@
+print "Greetings, sir.  It's wonderful to have you back."
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+# Some things I might want to be reminded about..
+task list
+print "=============================================================================="
+jot

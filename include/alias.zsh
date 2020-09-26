@@ -76,6 +76,21 @@ alias curl='curl -L -O'
 #   To use the 'bare' form of curl with no options, try:
 #       $ env curl
 
+alias w3m='w3m -B'
+
+# When using whence to learn about a command,
+#   c - csh-style output (seems more complete)
+#   v - more verbose output
+#   a - show all occurences
+#   f - if it's a function, show its source code
+#     x - when printing functions, use a 4-space tabstop
+#   S - if it's a symlink, show all the links until its final resolution
+#   m - take arguments to be regex patterns and output all matching commands
+#       (usually doesn't do anything unless wildcards are used.)
+#   
+alias wh='whence -cvafSmx4'
+
+
 #####################################################
 # FOR FUN
 #####################################################
@@ -84,10 +99,9 @@ alias dammit,=sudo
 alias please=sudo
 alias xyzzy='echo Nothing happens'
 
+
 ##############################################################################
 # NEW COMMANDS - (i.e., the LHS didn't exist before alias is parsed)
-#
-#   Ideally, I'd like to be an alphabetically sorted list of all such commands
 ##############################################################################
 alias datestamp='date +%F'
 alias v=vim
@@ -114,15 +128,15 @@ alias rtfm=man
 alias sassify='sass --watch --sourcemap=none --scss'
 alias t=task
 alias tt=task
-alias ucode='unicode --max 0 --brief'  # `unicode` - no limit on answers returned, one line each. 
-alias whatprovides='apt-file search -x'
-alias which-command=whence
-alias x=exit  # So far I've only run this accidentally just a few times.
 
+# `unicode` - no limit on answers returned, one line each, assume pattern. 
+alias ucode='unicode --max 0 --brief -r'  
+
+alias whatprovides='apt-file search -x'
+alias x=exit  # So far I've only run this accidentally just a few times.
 
 # Work around a common typo
 alias cd..='cd ..'
-
 
 # Show path, one per line
 alias path='foreach p in $path; { print $p }'
@@ -139,35 +153,36 @@ alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 # One-handed typing (for whatever reason). Read more about this at:
 #   http://blog.xkcd.com/2007/08/14/mirrorboard-a-one-handed-keyboard-layout-for-the-lazy/
 # Honestly, I don't know why I keep this -- I never use it.  But it preserves
-# work done by somebody I like.
+# work I like done by somebody I like.
 alias mirrorboard='xkbcomp ~/bin/mirrorboard.xkb $DISPLAY 2>/dev/null'
 
 alias calc='autoload zcalc && zcalc'
 
+###############################################################################
 # SUFFIX ALIASES
+###############################################################################
+#
+# Associate file extensions with programs used to open/run them
+#
+#   alias -s ext=prog
+#
+# Means that the command 'anything.ext' is replaced with 'prog anything.ext'.
+# More at `man zshbuiltins`.
+alias -s txt=less
+alias -s cfg=less
+alias -s conf=less
+alias -s log=less
+alias -s mkd=less
 
-# From `man zshbuiltins`:
-#
-#     If the -s flags is present, define a suffix alias: if the command word on a
-#     command line is in the form `text.name', where text is any non-empty string,
-#     it is  replaced  by the text `value text.name'.  Note that name is treated as
-#     a literal string, not a pattern.  A trailing space in value is not special in
-#     this case.  For example,
-#
-#           alias -s ps=gv
-#
-#     will cause the command `*.ps' to be expanded to `gv *.ps'.
-#
-# (In other words, it causes the 'gv' program to be used automatically when you
-# try to execute a postscript file.  The file does not need to be made
-# executable.)
-#
-# typescript
+alias -s zsh=vim
+alias -s rb=vim
+alias -s py=vim
+
 alias -s ts=tsc
-# javascript
 alias -s js=nodejs
-# PDFs
 alias -s pdf=xreader
+###############################################################################
+
 
 # hacker news
 alias hn="www-browser 'http://news.ycombinator.com'"
@@ -184,25 +199,6 @@ alias work-mode='echo "vol:$(vol 0)\nbrightness: $(dim 100)"'
 # Just report the volume/brightness settings
 alias mode='echo "vol:$(vol)\nbrightness: $(dim)"'
 
-#alias stealth=cloak
-#alias stealth-mode=cloak
-#alias quiet=cloak
-#alias quiet-mode=cloak
-#alias simmerdown=cloak
-
-#alias unstealth=decloak
-#alias destealth=decloak
-#alias uncloak=decloak
-#alias unquiet=decloak
-#alias dequiet=decloak
-#alias wakeup=decloak
-
-#alias work=work-mode
-#alias atwork=work-mode
-#alias working=work-mode
-#
-#alias whatmode=mode
-#alias what-mode=mode
 
 # VOLUME
 ########
@@ -261,9 +257,14 @@ alias shrug="echo '¯\_(ツ)_/¯'"
 alias shock="cd ~/.local/share/Steam/steamapps/common/SS2/support/systemshock2/drive_c/Program\ Files/SystemShock2/ && wine Shock2.exe"
 
 # Maybe there's a better way, but for now..
-alias lua="lua5.3"
+# alias lua="lua5.3"
 
 # suspend to memory 
+#   TODO: modify this to detect which window manager is running (via `wmctrl
+#   -m`), so that the appropriate suspend command can be used.
+#
+#   For XFCE, use `xfce4-session-logout --suspend`
+#   For LXQT (Openbox), use `lxqt-leave --suspend`
 alias suspend-to-memory="xfce4-session-logout --suspend"
 alias stm=suspend-to-memory
 alias shh=suspend-to-memory
@@ -272,3 +273,8 @@ alias goodnight=suspend-to-memory
 
 alias say='print'
 alias p='print'
+
+# shortcut to a script I wrote to show count and names of processes that match
+# a given string
+alias qp='queryproc'
+
