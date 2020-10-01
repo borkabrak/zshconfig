@@ -260,12 +260,7 @@ alias shock="cd ~/.local/share/Steam/steamapps/common/SS2/support/systemshock2/d
 # alias lua="lua5.3"
 
 # suspend to memory 
-#   TODO: modify this to detect which window manager is running (via `wmctrl
-#   -m`), so that the appropriate suspend command can be used.
-#
-#   For XFCE, use `xfce4-session-logout --suspend`
-#   For LXQT (Openbox), use `lxqt-leave --suspend`
-alias suspend-to-memory="xfce4-session-logout --suspend"
+alias suspend-to-memory="systemctl suspend"
 alias stm=suspend-to-memory
 alias shh=suspend-to-memory
 alias sleepytime=suspend-to-memory
