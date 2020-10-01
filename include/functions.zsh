@@ -300,12 +300,12 @@ function hotrod() {
 #     %F{color/number}colored text%f
 function colortable {
 
-  separator=" "   # Options: │, |
+  separator=" "   # │ | : 
 
-  # Using 36 entries per line (with a small enough font to get a whole row on
-  # the screen) shows an effect I don't quite understand.  Like particular hues
-  # lining up.  Must have something to do with how the list was originally
-  # determined.  But what, exactly?
+  # NOTE: Using 36 entries per line (with a small enough font to get a whole
+  # row on the screen) shows an effect I don't quite understand.  Like
+  # particular hues lining up.  Must have something to do with how the list was
+  # originally determined.  But what, exactly?
   entries_per_line=16   
 
   # Use this to adjust the width of the column automatically to the width of
