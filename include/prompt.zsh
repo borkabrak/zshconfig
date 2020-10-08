@@ -47,23 +47,64 @@ PROMPT="${user}${at}${host}${sep}${current_directory}${arrow} "
 
 
 # Print a symbol to represent the state of power to the system
-function power_state_symbol() {
+function get_power_state_symbol() {
   if [[ $(acpi -a) =~ "on-line" ]] { 
-    print "%F{10}🔌%f"  # Power adapter is plugged in
+    print "%F{10}🔌 %f"  # Power adapter is plugged in
     } else { 
-    print "%F{11}🗲%f"   # Otherwise, it must be discharging
+    print "%F{11}🗲 %f"   # Otherwise, it must be discharging
   }
 }
 
+function get_battery_graphic() {
+  # Given the battery charge percentage ($1), print a graphical representation, possibly including the charge
+
+  currentcharge=$1
+  color=015 #default color is regular old white
+  max=100   # max percentage is, of course, 100
+  symbols=({▁..█})  # List of symbols is U+2581..U+2588 (▁ ▂ ▃ ▄ ▅ ▆ ▇ █)  
+  symbol=$symbols[$#symbols]
+
+  # Approximately map the current battery charge (1..100) to the corresponding
+  # symbol from the array.  This should be tolerant of arbitrary changes to the
+  # symbol list.
+  subscript=$(( ( $currentcharge / ($max / $#symbols) ) + 1 ))
+  if [[ subscript -gt $#symbols ]] { subscript=$#symbols }
+  symbol=$symbols[$subscript]
+
+  # Set color
+  #   green:      near-full
+  #   yellow:     in between
+  #   red:        low
+  if [[ currentcharge -gt 66 ]] {
+    color=10
+  } elif [[ currentcharge -gt 33 ]] {
+    color=11
+  } else {
+    color=1
+  }
+
+  retval="%F{$color}$symbol$currentcharge%%%f"
+
+  if [[ currentcharge -lt 10 ]] {
+    # If charge < 10%, try to make it more attention-getting
+    retval="%S%F{1}‼$currentcharge%%%f%s"
+  }
+
+  print $retval
+}
 
 # precmd(): A special function that ZSH runs automatically before each display
 # of the prompt.
 function precmd() {
 
-  time="%S%F{141}$(date +'%l:%M%p')%s%f"
-  battery="%F{10}$(battery-percent)%%%f$(power_state_symbol)"
-      tty="%F{ 87}tty$(tty | env grep -o '[0-9]')%f"
+  batterypercent=$(battery-percent)
 
+  time="%S%F{141}$(date +'%l:%M%p')%s%f"
+  battery="$(get_power_state_symbol)$(get_battery_graphic $batterypercent)"
+      tty="%F{87}tty$(tty | env grep -o '[0-9]\+')%f"
+
+
+  
   # ZSH lets you have a 'right prompt', which sits on the far right side of the
   # command line.  
   RPROMPT="${battery} ${tty} ${time}"
