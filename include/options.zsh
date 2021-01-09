@@ -10,6 +10,10 @@
 # a 'param', and is probably set in zshenv.
 ################################################################################
 
+# NOTE: SET ALL OPTIONS TO DEFAULT AT THE BEGINNING HERE.  When re-sourcing
+# this file, to be sure only options set here are changed from default.  Like
+# in alias.zsh, when clearing aliases at the beginning.
+
 ## History
     
     # Lines are added to the history file upon execution, until file size is

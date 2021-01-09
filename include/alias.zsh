@@ -42,6 +42,10 @@
 #
 #####################################################
 
+# First, remove all existing aliases. Necessary to get a clean slate when, say,
+# changing something in this file and re-sourcing zshrc from an existing shell.
+unalias -as 
+
 #####################################################
 # SET DEFAULT OPTIONS TO VARIOUS COMMANDS
 ##################################################### 
@@ -66,28 +70,33 @@ alias tree='tree -C'
 # Running commands to xargs with nothing on STDIN:  not even once. :-D
 alias xargs='xargs -r'
 
-alias curl='curl -L -O'
 #   -L: If a url responds with a 3xx 'Moved' status, this option automatically
 #   retries the download from the new location.
 #
 #   -O: Write output to a local file named similarly to the url.  (Instead of
 #   the default writing to STDOUT.)
-#
-#   To use the 'bare' form of curl with no options, try:
-#       $ env curl
+#alias curl='curl -L -O'
 
+# w3m is damn handy.
+#   -B: If no argument is given, open w3m on a list of bookmarks
 alias w3m='w3m -B'
+
+# The w3m package provides a command to easily browse manpages.  I think I much
+# prefer this to man's basic interface.
+alias wman=w3mman
+
+# Use w3m *in place* of man
+alias man=w3mman
 
 # When using whence to learn about a command,
 #   c - csh-style output (seems more complete)
 #   v - more verbose output
 #   a - show all occurences
 #   f - if it's a function, show its source code
-#     x - when printing functions, use a 4-space tabstop
+#     x4 - when printing functions, use a 4-space tabstop
 #   S - if it's a symlink, show all the links until its final resolution
 #   m - take arguments to be regex patterns and output all matching commands
 #       (usually doesn't do anything unless wildcards are used.)
-#   
 alias wh='whence -cvafSmx4'
 
 
@@ -260,7 +269,6 @@ alias shock="cd ~/.local/share/Steam/steamapps/common/SS2/support/systemshock2/d
 # alias lua="lua5.3"
 
 # suspend to memory 
-alias suspend-to-memory="systemctl suspend"
 alias stm=suspend-to-memory
 alias shh=suspend-to-memory
 alias sleepytime=suspend-to-memory
@@ -271,5 +279,21 @@ alias p='print'
 
 # shortcut to a script I wrote to show count and names of processes that match
 # a given string
-alias qp='queryproc'
+alias pquery='process-query'
+alias pq='process-query'
+alias qp='process-query'
 
+# A quick shortcut useful for 'unaliasing' a command for a single line.  In other words,
+#
+#   $ env <command> <options>
+#
+# ..directly references the executable file for <command>, which means it
+# doesn't run any aliases that may have been set over the command's name in the
+# shell.
+#
+# In even *other* words, if I have 'ls' aliased to 'ls -hsxyz', but I don't want all those options in effect for what I'm trying to do, I can just say
+#
+#   $ e ls
+#
+# ..and ls is once again *just* '/bin/ls'.
+alias e=env

@@ -33,18 +33,6 @@
 #   } | less -R
 # }
 
-# I've broken different parts down into pieces to try to make futzing around
-# with it easier:
-#-------------------------------------------------------------------------------------
-               user="%F{ 10}%n%f"
-                 at="%F{ 87}@%f"
-               host="%F{141}%m%f"
-                sep="%F{ 87}:%f"
-  current_directory="%F{ 12}%~%f"
-              arrow="%F{ 13}➤%f"
-#-------------------------------------------------------------------------------------
-PROMPT="${user}${at}${host}${sep}${current_directory}${arrow} "
-
 
 # Print a symbol to represent the state of power to the system
 function get_power_state_symbol() {
@@ -55,7 +43,7 @@ function get_power_state_symbol() {
   }
 }
 
-function get_battery_graphic() {
+function battery_capacity() {
   # Given the battery charge percentage ($1), print a graphical representation, possibly including the charge
 
   currentcharge=$1
@@ -72,18 +60,18 @@ function get_battery_graphic() {
   symbol=$symbols[$subscript]
 
   # Set color
-  #   green:      near-full
-  #   yellow:     in between
-  #   red:        low
   if [[ currentcharge -gt 66 ]] {
+    # green: near-full
     color=10
   } elif [[ currentcharge -gt 33 ]] {
+    # yellow: in between
     color=11
   } else {
+    # red: low
     color=1
   }
 
-  retval="%F{$color}$symbol$currentcharge%%%f"
+  retval="%F{$color}$currentcharge%% $symbol %f"
 
   if [[ currentcharge -lt 10 ]] {
     # If charge < 10%, try to make it more attention-getting
@@ -97,15 +85,27 @@ function get_battery_graphic() {
 # of the prompt.
 function precmd() {
 
-  batterypercent=$(battery-percent)
+                           user="%F{ 10}%n%f"
+                             at="%F{ 87}@%f"
+                           host="%F{141}%m%f"
+                            sep="%F{ 87}:%f"
+              current_directory="%F{ 12}%~%f"
+                          arrow="%F{ 13}➤%f"
+  current_directory_entry_count="🗁 %F{141}$(printf '%3s' $(ls | wc -l))%f"    # ⎹⎸
 
-  time="%S%F{141}$(date +'%l:%M%p')%s%f"
-  battery="$(get_power_state_symbol)$(get_battery_graphic $batterypercent)"
-      tty="%F{87}tty$(tty | env grep -o '[0-9]\+')%f"
+                           time="%S%F{141}$(date +'%l:%M%p %S"')%s%f"
+                        battery="$(get_power_state_symbol)$(battery_capacity $(battery-percent))"
+                            tty="%F{87}$(tty)%f"
 
-
+  ###############################################################################################
+  # Main prompt
+  #-------------
+  PROMPT="${user}${at}${host}${sep}${current_directory}${arrow} "
+  ###############################################################################################
   
-  # ZSH lets you have a 'right prompt', which sits on the far right side of the
-  # command line.  
-  RPROMPT="${battery} ${tty} ${time}"
+  ###################################
+  # 'Right' prompt
+  #----------------
+  RPROMPT="${battery} ${current_directory_entry_count} ${tty} ${time}"
+  ###################################
 }

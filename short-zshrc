@@ -1,0 +1,7 @@
+# Source ALL files ending in .zsh ANYWHERE under the compoenents directory.
+#   So you could, for example, add another set of config files by just throwing
+#   them into a directory within your own components directory.
+#
+#   This file is provided as a shorter alternative to the default zshrc.
+#   Honestly, I'm not sure why.
+source =(cat $HOME/.zsh/include/**/*.zsh)

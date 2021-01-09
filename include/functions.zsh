@@ -268,14 +268,21 @@ function parseInt() {
     grep -o '[0-9]\+' =(echo $1) | head -1
 }
 
-function queryproc() {
-# Show all processes matching a string, and a summary count at the end.
-# Seems awfully specific, but I keep finding myself doing it, so..
-#	Example:
-#		$ queryproc steam			# show all steam processes, with a count of how many there are.
+function process-query() {
 
+  if [[ $# -lt 1 ]] {
+    print "
+    USAGE 
+      $0 <pattern>
+
+    DESCRIPTION
+      Print all currently running processes matching <pattern> and a summary
+      count of how many there are.
+    "
+    return 1
+  }
 	pgrep -fa $1
-	print "$hr\n'$1' procs: $(pgrep -fa $1 | wc -l)"
+	print -P "===\n%F{13}$(pgrep -fc $1)%f processes matching '%F{10}$1%f'"
 }
 
 function rand() {
@@ -302,11 +309,14 @@ function colortable {
 
   separator=" "   # │ | : 
 
+
+  # ${1-16} means return $1 or, if $1 is not set, return 16.  In other words,
+  # set this to the param passed to this function or default to 16.
+  entries_per_line=${1-16}  
   # NOTE: Using 36 entries per line (with a small enough font to get a whole
   # row on the screen) shows an effect I don't quite understand.  Like
   # particular hues lining up.  Must have something to do with how the list was
   # originally determined.  But what, exactly?
-  entries_per_line=16   
 
   # Use this to adjust the width of the column automatically to the width of
   # the screen.
@@ -315,11 +325,8 @@ function colortable {
 
   for n in {0..255}; {
 
-    # Add leading zeros so everything lines up
-    num=$(printf %0.3i $n)  
-
-    # output
-    print -Pn "${separator}%F{$n}${num}%f" 
+    # output - Add leading zeros so everything lines up
+    print -Pn "${separator}%F{$n}$(printf %0.3i $n)%f" 
 
     # add a new line every so many entries
     if [[ $(( ( n + 1 ) % $entries_per_line )) -eq 0 ]] { 
@@ -337,10 +344,154 @@ function colorlist {
   } | less -R
 }
 
-# A bit of functionality tmux seems to make circuitous.  Run this from inside
-# an existing tmux session to change the working directory in which new windows
-# will be opened.
+# A bit of functionality that tmux seems to want to make circuitous, for some
+# reason.  Run this from inside an existing tmux session to change the working
+# directory in which new windows will be opened.
 function tmux-cd() {
   tmux command-prompt -I $(pwd) -p "cd to:" "attach -c %1" 
 }
 
+# Suspend system in a manner independent of desktop environment
+function suspend-to-memory() {
+
+  # Default
+  subcmd="suspend"
+
+  case $1 in
+
+    hard|hibernate)
+      subcmd="hibernate"
+      ;;
+
+  esac
+
+  print systemctl $subcmd
+  systemctl $subcmd
+
+}
+
+function duf() {
+  df -h .
+
+  print -Pn "Total size of %F{6}$(pwd)%f.. "
+  print -P  "%F{10}%B$(du -hs . 2>/dev/null | awk '{print $1}')%b%f"
+}
+
+###############################################################################
+# A couple of functions to more easily access directories on my phone, wherever
+# it gets auto-mounted.  These are functions because named directories and
+# shell params don't seem to handle wildcards (*) very well.
+#
+# One benefit to using the wildcards is that, even if the phone is disconnected
+# and reconnected, these functions still work without even needing to re-source
+# this file.
+#------------------------------------------------------------
+function cd-phone() {
+  cd /run/user/$UID/gvfs/mtp*/
+}
+
+function cd-phone-comics() {
+  cd /run/user/$UID/gvfs/mtp*/Internal*/Comics
+}
+
+function cd-phone-sdcard() {
+  cd /run/user/$UID/gvfs/mtp*/SD*/
+}
+###############################################################################
+
+# Show the largest $1 directories in the current location
+function showlargest() {
+
+  # first argument: how many to show.  Default to 10.
+  count=${1-10}  
+
+  # 1048576 = 1024 * 1024 (Converts bytes to GB)
+  du * | sort -rn | head -$count | awk '{print ($1 / 1048576 ) "GB", $0}'
+}
+
+# Print something to the screen and run it through a speech synthesizer
+function speak {
+  print $argv 
+  espeak "$argv" & # throw it in the background so we don't wait on a potentially long speech
+}
+
+
+############################################################
+# A couple of functions to help with reading markdown files.
+#
+# ----------------------------------------------------------
+# markdownconvert - converts a markdown file into 
+#   $1 - name of file containing markdown source
+# ----------------------------------------------------------
+function markdownconvert() {
+
+  # Handle absent parameter
+  if [[ $#argv -lt 1 ]] {
+    print "
+USAGE
+
+  $0 <markdown file>
+
+
+DESCRIPTION
+
+  Converts a markdown file into HTML.  Returns (prints) the name of the file
+  containing the HTML-ized markdown content.
+
+      "
+    return 1
+  }
+
+  # The filename can be anything that persists long enough (the '=(<command>)'
+  # shell construct doesn't, for some reason) 
+  filename="/tmp/markdownfile.html"
+  markdown $1 > $filename
+  print $filename
+}
+
+# Display a markdown file in a browser
+function markdown-read() {
+  # Use a browser to display the file
+  x-www-browser $(markdownfile $1)
+}
+
+# ----------------------------------------------------------
+# Display a markdown file in a browser
+#   $1 - name of file containing markdown source
+# ----------------------------------------------------------
+function markdown-read() {
+  x-www-browser $(markdownconvert $1)
+}
+
+# Output the integer percentage of battery charge.
+function battery-percent {
+  acpi -b | head -1 | perl -pe 's/.*?(\d+)%.*/\1/i'
+}
+
+# Save obscure characters along with a little information about them
+function unicode-junk-drawer() {
+
+  savefile="unicode-characters.txt"
+
+  # If no params given, print help and quit
+  if [[ $# -lt 1 ]] {
+    print "
+    USAGE: $0 <chars>
+      chars - unicode characters to save
+
+    DESCRIPTION: 
+      Save some info about obscure unicode characters, in case I want to reuse them.
+      "
+      return 1
+  }
+
+  chars=$*  # TODO: Split this into individual characters
+
+  # Write character information to the file, then sort the file, removing
+  # duplicate characters
+  unicode -s --max 0 --brief $chars | tee -a $savefile
+  content=$(cat $savefile)
+  print $content | sort -u > $savefile
+
+  print -P "%F{6}Any new characters appended to: $savefile%f"
+}
