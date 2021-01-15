@@ -17,6 +17,7 @@ zshfiles=(
     zshenv
     zshrc
     zlogin
+    zprofile
 )
 
 # Read current directory, into which to create links
