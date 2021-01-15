@@ -1,8 +1,8 @@
 ZSH INCLUDE FILES
 =================
 
-When Zsh is run, all files will be sourced whose name matches the pattern
-`~/.zsh/include/*.zsh$`
+When Zsh is run, all files will be sourced that exist in this directory with
+an extension of .zsh.
 
 Naming a file accordingly will include it.  Nothing further needs to be done.
 

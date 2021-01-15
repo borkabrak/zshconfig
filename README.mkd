@@ -1,23 +1,21 @@
 ZSH-CONFIG
 ==========
 
-This is a portable setup for zsh configuration.  It contains a directory
-housing the zsh startup files and an installation script, which replaces the
-zsh startup files with symlinks into this repository.
+This is a ZSH configuration broken up into modular parts - separate files for
+options, environment variables, aliases, functions, etc.
 
-ZSH has a ton of possible configuration.  Once the zshrc file gets big enough,
-it makes sense to split it into different COMPONENT FILES, by type (shell
-functions, options, named directories, etc.).  Then zshrc has only one job -
-source the components.
+The 'include/' directory provides a place to store those parts.  When ZSH is run, all
+files in that directory with a .zsh extension will be sourced.  This allows
+certain techniques to ease their management, such as:
 
-That's what I've done here.  Anything in the directory that ends in '.zsh' is
-read into configuration.
+* Putting a file there (with the .zsh extension) will "install" it.  Nothing
+  further needs to be done.
 
-  - To add a file, just name it and give it a '.zsh' extension.
+* To deactivate or "turn off" a particular file, just change its extenstion
+  from .zsh to '.inactive', or '.disabled', or some such.
 
-  - Disabling a file is as easy as changing the extension to '.disabled' or
-    '.off', etc.
-
-  - Finding existing configuration rules is aided by naming the files
-    according to their contents.
+* "Plugins" can be used.  That is, all commands implementing a particular unit
+  of functionality can be put together in one file, named something
+  descriptive of the function, and put in the include directory, where it can
+  be made active, inactive, or edited as needed.
 
