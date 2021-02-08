@@ -1,16 +1,21 @@
 # My own personal ZSH functions
+#
+# This is a list of functions written to extend normal zsh behavior
+
 
 # Autoload other functions from the ZSH standard library
 # (/usr/share/zsh/functions)
-
 # mv, cp, ln on multiple files at once
 autoload zmv zcp zln
 
-function ghub() { 
+
+function ghub() {
 # Clone a github repository by name alone (in the form 'user/repository')
-  git clone https://github.com/$1.git 
+  git clone https://github.com/$1.git
 }
 
+
+alias makdir=makedir
 function makedir() {
 # Create a new directory and automatically cd into it.
 # (cf. `mkdir -p`)
@@ -20,7 +25,6 @@ function makedir() {
     cd $1
 }
 
-alias makdir=makedir
 
 function timer(){
 # Wait <n> seconds and sound an alert noise.  Regularly report time left.
@@ -33,6 +37,7 @@ function timer(){
   }
   sfx warble;
 }
+
 
 function countdown() {
 
@@ -64,9 +69,9 @@ function countdown() {
   # Parse options
   while getopts "hmc:d" OPT; do
 
-    case $OPT in 
+    case $OPT in
 
-      h) 
+      h)
         usage $0 && return
         ;;
 
@@ -85,7 +90,7 @@ function countdown() {
     esac
 
   done
-  
+
   # Validate input
   duration=$@[$#]
   if ! [[ $duration =~ '^[0-9]+$' ]]; then
@@ -102,6 +107,7 @@ function countdown() {
   sleep $duration && "$command[@]"
 
 }
+
 
 function parseopts() {
 # For debugging.  Practice parsing options
@@ -121,6 +127,7 @@ function parseopts() {
     print "===================================="
     return $opts
 }
+
 
 function tracelink() {
 # Show each step in a chain of symbolic links
@@ -177,6 +184,7 @@ END
 
 }
 
+
 function newsite() {
 # Carry out the shell-level operations common to setting up most websites.
 
@@ -209,6 +217,7 @@ function newsite() {
 
 }
 
+
 function c() {
 #########################################################################
 # c - for "see" - Show any summary info possible for arbitrary expression
@@ -217,7 +226,7 @@ function c() {
 # Provide summary/descriptive information on things.  Try hard to be as
 # informative as possible with minimal instruction.
 #
-# TODO: 
+# TODO:
 #   * Allow globs. (e.g. '*.jpg')
 #
 # -jdc 2014-12-04
@@ -230,11 +239,11 @@ function c() {
     #      * Directory - ls
     #      * Filename - ls; file; head
     #      * symlink - tracelink
-    
+
     # directory:
     if [[ -d $target ]]; then
         ls --indicator-style=classify --group-directories-first --human-readable --color --size  $target
-       
+
         print
         # Show the first few lines of any readme files that happen to be in the
         # directory.
@@ -246,7 +255,7 @@ function c() {
         # show the link chain
         tracelink $target;
 
-    # regular file: 
+    # regular file:
     elif [[ -f $target ]]; then
         (ls -hl $target; file $target) | grep --color=always $target
         print
@@ -261,6 +270,7 @@ function c() {
 
 }
 
+
 function parseInt() {
 # Return arg, stripped of anything that makes it not an integer
 
@@ -268,11 +278,12 @@ function parseInt() {
     grep -o '[0-9]\+' =(echo $1) | head -1
 }
 
+
 function process-query() {
 
   if [[ $# -lt 1 ]] {
     print "
-    USAGE 
+    USAGE
       $0 <pattern>
 
     DESCRIPTION
@@ -285,6 +296,7 @@ function process-query() {
 	print -P "===\n%F{13}$(pgrep -fc $1)%f processes matching '%F{10}$1%f'"
 }
 
+
 function rand() {
 # Print a random number between 0 and a given param (minus one)
 # If no param is given, then just print $RANDOM
@@ -294,6 +306,7 @@ function rand() {
   if [[ $1 ]]; then retval=$(( $RANDOM % $1 )) fi
   print $retval
 }
+
 
 function hotrod() {
 # Output brief info on the process currently using the most CPU
@@ -307,12 +320,12 @@ function hotrod() {
 #     %F{color/number}colored text%f
 function colortable {
 
-  separator=" "   # │ | : 
+  separator=" "   # │ | :
 
 
   # ${1-16} means return $1 or, if $1 is not set, return 16.  In other words,
   # set this to the param passed to this function or default to 16.
-  entries_per_line=${1-16}  
+  entries_per_line=${1-16}
   # NOTE: Using 36 entries per line (with a small enough font to get a whole
   # row on the screen) shows an effect I don't quite understand.  Like
   # particular hues lining up.  Must have something to do with how the list was
@@ -321,21 +334,22 @@ function colortable {
   # Use this to adjust the width of the column automatically to the width of
   # the screen.
   #
-  # entries_per_line=$(( $COLUMNS / 4 ))    
+  # entries_per_line=$(( $COLUMNS / 4 ))
 
   for n in {0..255}; {
 
     # output - Add leading zeros so everything lines up
-    print -Pn "${separator}%F{$n}$(printf %0.3i $n)%f" 
+    print -Pn "${separator}%F{$n}$(printf %0.3i $n)%f"
 
     # add a new line every so many entries
-    if [[ $(( ( n + 1 ) % $entries_per_line )) -eq 0 ]] { 
-      print -n "${separator}\n" 
+    if [[ $(( ( n + 1 ) % $entries_per_line )) -eq 0 ]] {
+      print -n "${separator}\n"
     }
 
   }
 
 }
+
 
 # Print a sizeable bit of text showing number/color correspondence
 function colorlist {
@@ -344,12 +358,14 @@ function colorlist {
   } | less -R
 }
 
+
 # A bit of functionality that tmux seems to want to make circuitous, for some
 # reason.  Run this from inside an existing tmux session to change the working
 # directory in which new windows will be opened.
 function tmux-cd() {
-  tmux command-prompt -I $(pwd) -p "cd to:" "attach -c %1" 
+  tmux command-prompt -I $(pwd) -p "cd to:" "attach -c %1"
 }
+
 
 # Suspend system in a manner independent of desktop environment
 function suspend-to-memory() {
@@ -370,12 +386,14 @@ function suspend-to-memory() {
 
 }
 
+
 function duf() {
   df -h .
 
   print -Pn "Total size of %F{6}$(pwd)%f.. "
   print -P  "%F{10}%B$(du -hs . 2>/dev/null | awk '{print $1}')%b%f"
 }
+
 
 ###############################################################################
 # A couple of functions to more easily access directories on my phone, wherever
@@ -390,28 +408,33 @@ function cd-phone() {
   cd /run/user/$UID/gvfs/mtp*/
 }
 
+
 function cd-phone-comics() {
   cd /run/user/$UID/gvfs/mtp*/Internal*/Comics
 }
 
+
 function cd-phone-sdcard() {
   cd /run/user/$UID/gvfs/mtp*/SD*/
 }
+
+
 ###############################################################################
 
 # Show the largest $1 directories in the current location
 function showlargest() {
 
   # first argument: how many to show.  Default to 10.
-  count=${1-10}  
+  count=${1-10}
 
   # 1048576 = 1024 * 1024 (Converts bytes to GB)
   du * | sort -rn | head -$count | awk '{print ($1 / 1048576 ) "GB", $0}'
 }
 
+
 # Print something to the screen and run it through a speech synthesizer
 function speak {
-  print $argv 
+  print $argv
   espeak "$argv" & # throw it in the background so we don't wait on a potentially long speech
 }
 
@@ -420,12 +443,11 @@ function speak {
 # A couple of functions to help with reading markdown files.
 #
 # ----------------------------------------------------------
-# markdownconvert - converts a markdown file into 
+# markdownconvert - converts a markdown file into
 #   $1 - name of file containing markdown source
 # ----------------------------------------------------------
 function markdownconvert() {
 
-  # Handle absent parameter
   if [[ $#argv -lt 1 ]] {
     print "
 USAGE
@@ -443,17 +465,19 @@ DESCRIPTION
   }
 
   # The filename can be anything that persists long enough (the '=(<command>)'
-  # shell construct doesn't, for some reason) 
+  # shell construct doesn't, for some reason)
   filename="/tmp/markdownfile.html"
   markdown $1 > $filename
   print $filename
 }
+
 
 # Display a markdown file in a browser
 function markdown-read() {
   # Use a browser to display the file
   x-www-browser $(markdownfile $1)
 }
+
 
 # ----------------------------------------------------------
 # Display a markdown file in a browser
@@ -463,10 +487,12 @@ function markdown-read() {
   x-www-browser $(markdownconvert $1)
 }
 
+
 # Output the integer percentage of battery charge.
 function battery-percent {
   acpi -b | head -1 | perl -pe 's/.*?(\d+)%.*/\1/i'
 }
+
 
 # Save obscure characters along with a little information about them
 function unicode-junk-drawer() {
@@ -479,7 +505,7 @@ function unicode-junk-drawer() {
     USAGE: $0 <chars>
       chars - unicode characters to save
 
-    DESCRIPTION: 
+    DESCRIPTION:
       Save some info about obscure unicode characters, in case I want to reuse them.
       "
       return 1
