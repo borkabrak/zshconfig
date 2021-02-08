@@ -495,3 +495,25 @@ function unicode-junk-drawer() {
 
   print -P "%F{6}Any new characters appended to: $savefile%f"
 }
+
+
+# Get just the inode number for a directory entry
+function inode() {
+  if [[ $#argv -lt 1 ]] {
+    print "
+      DESCRIPTION:
+        Fetch inode numbers for directory entries
+
+      USAGE:
+        $0 <entry name> [<entry name>] ...
+    "
+    return 1
+  }
+
+  for entryname in $argv; {
+
+    ls -i $entryname | cut -f1 -d' '
+
+  }
+
+}
