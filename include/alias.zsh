@@ -86,7 +86,19 @@ alias w3m='w3m -B'
 alias wman=w3mman
 
 # Use w3m *in place* of man
-alias man=w3mman
+#
+#   NOTE: 2021-02-11
+#     I'm turning this off for the nonce, for exactly one reason - marks.  The
+#     standard, less-style man pager allows adding and navigating to marks via
+#     backtick and apostrophe, respectively.  Everything else about w3m as a
+#     man pager is genuinely awesome, but I just can't do without the
+#     bookmarking capbilities.
+#
+#     This just disables the replacement of the `man` command itself - w3mman
+#     can still be used by name, or any other alises
+#
+# alias man=w3mman
+
 
 # When using whence to learn about a command,
 #   c - csh-style output (seems more complete)
