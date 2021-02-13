@@ -309,3 +309,6 @@ alias qp='process-query'
 #
 # ..and ls is once again *just* '/bin/ls'.
 alias e=env
+
+# jot is a little script I wrote for very simple note taking
+alias j=jot
