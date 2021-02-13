@@ -363,7 +363,7 @@ function colorlist {
 # reason.  Run this from inside an existing tmux session to change the working
 # directory in which new windows will be opened.
 function tmux-cd() {
-  tmux command-prompt -I $(pwd) -p "cd to:" "attach -c %1"
+  env tmux command-prompt -I $(pwd) -p "cd to:" "attach -c %1"
 }
 
 
