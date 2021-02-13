@@ -8,7 +8,6 @@
 
 # Add a bin in my home dir, for my own scripts
 PATH=$PATH:~/bin
-PATH=$PATH:~/appimage
 
 # The EDITOR param can have non-obvious consequences.  From the KEYMAPS section
 # of `man zshzle`, when discussing the default keymap:
