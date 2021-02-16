@@ -1,54 +1,44 @@
 ########################################################################################################
-#vim:ft=zsh
 #
-#   ZSH aliases
-#
-#   This file was recovered on Sunday, 2015-07-19 at about 1:00pm.
-#
-#   Neat story:  I accidentally overwrote this file, while trying to add a new
-#   alias, by using the wrong redirection operator (Damn you '>/>>'!) To get it
-#   back, I first tried using an out-of-date file I found.  Not bad, but there
-#   were still several aliases I had added since then that this technique
-#   didn't recover.
-#
-#   I realized I could load a tmux session from a few days prior, and use the
-#   `alias` command with no parameters to output all the aliases *it* had
-#   loaded, from the original, lost, file.  A little jiggery-pokery with `diff`
-#   and `sort -u`, and bingo!  53 total aliases recovered, and all I lost were
-#   the comments!
-#
-#   Lesson learned: BACK UP MY DOTFILES.  I've got a git repo started for doing
-#   that (borkabrak/dotfiles), but I need to finish it (alternatively, find
-#   some backup script someone else has already written -- this can't be a
-#   unique problem.)
+#   ZSH ALIASES
 #
 ########################################################################################################
 
-######################################
-# USEFUL TIP: Ignoring aliases
-######################################
-# If an alias turns out to be in the way for any reason, there are at least a
-# couple different ways to run the command using the unaliased, 'factory
-# standard' version of it (i.e., ignoring any 'alias' commands that may have
-# been executed):
-#
-#   Both of these methods will run the 'real' (unaliased, as-installed) version
-#   of <command>, ignoring any attempts that may have been tried to alias it to
-#   something else:
-#
-#   $ /usr/bin/<command>      # Access the command via the full path to it
-#
-#   $ env <command>           # Use `env` to run the command, bypassing any aliases.
-#
-#####################################################
-
 # First, remove all existing aliases. Necessary to get a clean slate when, say,
 # changing something in this file and re-sourcing zshrc from an existing shell.
-unalias -as 
+unalias -a  # remove normal aliases
+unalias -as # remove suffix aliases
 
-#####################################################
-# SET DEFAULT OPTIONS TO VARIOUS COMMANDS
-##################################################### 
+########################################################################################################
+# SETTING DEFAULT OPTIONS TO VARIOUS COMMANDS
+########################################################################################################
+#
+#   This section is for aliases that copy a normal command, adding options that
+#   you almost always want to use.  'cp -i', for example, will make it always
+#   ask before it overwrites a file at the destination.
+#
+#   Q: ALMOST always, you say?
+#
+#   A: Right.  Sometimes you really do want to use the soi-disant 'factory
+#   standard' version of a command, without whatever nonsense you've done here
+#   to mess it up. :)  Here's how to do that:
+#
+#   Both of the following methods will run the 'real' (unaliased, as-installed)
+#   version of <command>, ignoring any attempts that may have been tried to
+#   alias it to something else:
+#
+#   1.) You could refer explicitly to the executable (assuming it has one):
+#
+#     $ /usr/bin/<command>
+#
+#
+#   2.) ..but it's usually simpler to just use the 'env' command:
+#
+#     $ env <command>
+#
+#
+########################################################################################################
+
 alias cp='cp -i' 
 alias grep='grep --color' 
 alias igrep='grep -i'
@@ -58,14 +48,12 @@ alias bc='bc -l'
 alias ls='ls -h --color=auto'
 alias mv='mv -i' 
 alias rm='rm -I'
+
 # Run tmux with 256-color and UTF-8 support
 alias tmux='tmux -2 -u'
+
 # Colorful tree view
 alias tree='tree -C'
-
-# Symlinks and such might be a better way to do this long-term, but I'm just
-# trying out neovim as a replacement for vim for now.
-#alias vim=nvim
 
 # Running commands to xargs with nothing on STDIN:  not even once. :-D
 alias xargs='xargs -r'
@@ -77,9 +65,11 @@ alias xargs='xargs -r'
 #   the default writing to STDOUT.)
 #alias curl='curl -L -O'
 
-# w3m is damn handy.
 #   -B: If no argument is given, open w3m on a list of bookmarks
 alias w3m='w3m -B'
+
+########################################################################################################
+
 
 # The w3m package provides a command to easily browse manpages.  I think I much
 # prefer this to man's basic interface.
@@ -105,20 +95,11 @@ alias wman=w3mman
 #   v - more verbose output
 #   a - show all occurences
 #   f - if it's a function, show its source code
-#     x4 - when printing functions, use a 4-space tabstop
 #   S - if it's a symlink, show all the links until its final resolution
 #   m - take arguments to be regex patterns and output all matching commands
 #       (usually doesn't do anything unless wildcards are used.)
+#   x4 - when printing functions, use a 4-space tabstop
 alias wh='whence -cvafSmx4'
-
-
-#####################################################
-# FOR FUN
-#####################################################
-alias cowfortune='fortune -a | cowsay -n'
-alias dammit,=sudo
-alias please=sudo
-alias xyzzy='echo Nothing happens'
 
 
 ##############################################################################
@@ -159,8 +140,8 @@ alias x=exit  # So far I've only run this accidentally just a few times.
 # Work around a common typo
 alias cd..='cd ..'
 
-# Show path, one per line
-alias path='foreach p in $path; { print $p }'
+# Show elements in $PATH, one per line
+alias path='print ${(F)path}'
 
 # Resetting PATH makes newly added files known to zsh's auto-completion
 alias repath='export PATH=$PATH'
@@ -183,12 +164,15 @@ alias calc='autoload zcalc && zcalc'
 # SUFFIX ALIASES
 ###############################################################################
 #
-# Associate file extensions with programs used to open/run them
+# Associate file extensions with programs used to open/run them.  
+#
+# For example:
 #
 #   alias -s ext=prog
 #
-# Means that the command 'anything.ext' is replaced with 'prog anything.ext'.
+# ..means that the command 'anything.ext' is replaced with 'prog anything.ext'.
 # More at `man zshbuiltins`.
+
 alias -s txt=less
 alias -s cfg=less
 alias -s conf=less
@@ -274,7 +258,8 @@ alias random-wikipedia-article='www-browser ''https://en.wikipedia.org/wiki/Spec
 #   (It seems as though there should be some sort of digraph-like functionality to do this in vim.)
 alias shrug="echo '¯\_(ツ)_/¯'"
 
-# Gotta do something weird to run System Shock 2..
+# System Shock was downloaded via Steam, but apparently it must be run directly
+# from this directory, or it throws a weird error and crashes..
 alias shock="cd ~/.local/share/Steam/steamapps/common/SS2/support/systemshock2/drive_c/Program\ Files/SystemShock2/ && wine Shock2.exe"
 
 # Maybe there's a better way, but for now..
@@ -295,20 +280,23 @@ alias pquery='process-query'
 alias pq='process-query'
 alias qp='process-query'
 
-# A quick shortcut useful for 'unaliasing' a command for a single line.  In other words,
-#
-#   $ env <command> <options>
-#
-# ..directly references the executable file for <command>, which means it
-# doesn't run any aliases that may have been set over the command's name in the
-# shell.
-#
-# In even *other* words, if I have 'ls' aliased to 'ls -hsxyz', but I don't want all those options in effect for what I'm trying to do, I can just say
-#
-#   $ e ls
-#
-# ..and ls is once again *just* '/bin/ls'.
-alias e=env
-
 # jot is a little script I wrote for very simple note taking
 alias j=jot
+
+# bat is supposed to be a better substitute for cat
+# alias cat=bat
+
+#####################################################
+# FOR FUN
+#
+# Dumb little things here just because I like them.
+#####################################################
+alias cowfortune='fortune -a | cowsay -n'
+alias dammit,=sudo
+alias please=sudo
+alias xyzzy='echo Nothing happens.'
+
+## uncategorized ##########
+
+alias e=env
+
