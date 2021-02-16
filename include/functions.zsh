@@ -363,7 +363,22 @@ function colorlist {
 # reason.  Run this from inside an existing tmux session to change the working
 # directory in which new windows will be opened.
 function tmux-cd() {
-  env tmux command-prompt -I $(pwd) -p "cd to:" "attach -c %1"
+
+  # Default value is the current directory of the current window, but allow a
+  # param to be passed.
+  defaultinput=$(pwd)
+  if [[ $#argv -gt 0 ]]; then
+    # Make sure any param we're given is, in fact, an existing directory.
+    if [[ -d $argv[1] ]]; then
+      defaultinput=$argv[1]
+    else
+      print "$argv[1] does not seem to be an existing directory."
+    fi
+
+  fi
+
+  env tmux command-prompt -I $defaultinput -p "Change tmux's working directory to:" "attach -c %1"
+
 }
 
 
