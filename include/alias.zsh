@@ -39,55 +39,25 @@ unalias -as # remove suffix aliases
 #
 ########################################################################################################
 
+alias bc='bc -l' 
 alias cp='cp -i' 
 alias grep='grep --color' 
 alias igrep='grep -i'
 alias less='less -iR' 
-alias a2r='sudo apache2ctl restart' 
-alias bc='bc -l' 
 alias ls='ls -h --color=auto'
 alias mv='mv -i' 
+#alias print='print -P'  # Leaving this here so I don't try it again.  You'll end up typing over the prompt. ???
 alias rm='rm -I'
-
-# Run tmux with 256-color and UTF-8 support
-alias tmux='tmux -2 -u'
-
-# Colorful tree view
-alias tree='tree -C'
-
-# Running commands to xargs with nothing on STDIN:  not even once. :-D
-alias xargs='xargs -r'
-
-#   -L: If a url responds with a 3xx 'Moved' status, this option automatically
-#   retries the download from the new location.
-#
-#   -O: Write output to a local file named similarly to the url.  (Instead of
-#   the default writing to STDOUT.)
-#alias curl='curl -L -O'
-
-#   -B: If no argument is given, open w3m on a list of bookmarks
-alias w3m='w3m -B'
-
+alias tmux='tmux -2 -u' # Run tmux with 256-color and UTF-8 support
+alias tree='tree -C' # Colorful tree view
+alias w3m='w3m -B' #   -B: If no argument is given, open w3m on a list of bookmarks
+alias xargs='xargs -r' # Running commands to xargs with nothing on STDIN:  not even once. :-D
 ########################################################################################################
 
-
 # The w3m package provides a command to easily browse manpages.  I think I much
-# prefer this to man's basic interface.
+# prefer this to man's basic interface.  (Except for marks, dammit.  They're
+# just too useful to give up entirely.)
 alias wman=w3mman
-
-# Use w3m *in place* of man
-#
-#   NOTE: 2021-02-11
-#     I'm turning this off for the nonce, for exactly one reason - marks.  The
-#     standard, less-style man pager allows adding and navigating to marks via
-#     backtick and apostrophe, respectively.  Everything else about w3m as a
-#     man pager is genuinely awesome, but I just can't do without the
-#     bookmarking capbilities.
-#
-#     This just disables the replacement of the `man` command itself - w3mman
-#     can still be used by name, or any other alises
-#
-# alias man=w3mman
 
 
 # When using whence to learn about a command,
@@ -105,31 +75,32 @@ alias wh='whence -cvafSmx4'
 ##############################################################################
 # NEW COMMANDS - (i.e., the LHS didn't exist before alias is parsed)
 ##############################################################################
+alias a2r='sudo apache2ctl restart' 
 alias datestamp='date +%F'
-alias v=vim
-alias gg='git status -sb'
 alias g=git
+alias gg='git status -sb'
+alias grevim=regvim
 alias hh='fc -li 0' #full history, with extra info.  `fc` is worth reading about in `man zshbuiltins`
+alias L='ls -L'
+alias l=ls
+alias la='ls -a'
 alias lisp='clisp -q'
 alias ll='ls -l'
-alias la='ls -a'
 alias LL='ls -lL'
-alias l=ls
-alias L='ls -L'
-alias lsdirs='ls -d */' # List only directories
 alias lsd=lsdirs
+alias lsdirs='ls -d */' # List only directories
 alias named_directories='hash -d'  #List named directories
 alias open=xdg-open
 alias readme='vim README.mkd'
-alias revim='vim -c "source ~/.vim/shutdown_session.vim"'
 alias regvim='gvim -c "source ~/.vim/shutdown_session.vim"'
-alias grevim=regvim
-alias vv='revim'
+alias revim='vim -c "source ~/.vim/shutdown_session.vim"'
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 alias rtfm=man
 alias sassify='sass --watch --sourcemap=none --scss'
 alias t=task
 alias tt=task
+alias v=vim
+alias vv='revim'
 
 # `unicode` - no limit on answers returned, one line each, assume pattern. 
 alias ucode='unicode --max 0 --brief -r'  
@@ -148,7 +119,6 @@ alias repath='export PATH=$PATH'
 
 # network stuff
 alias pingle='ping 8.8.8.8'
-alias p=pp
 alias pp='ping 8.8.8.8'
 alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip'
 
@@ -156,7 +126,7 @@ alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 #   http://blog.xkcd.com/2007/08/14/mirrorboard-a-one-handed-keyboard-layout-for-the-lazy/
 # Honestly, I don't know why I keep this -- I never use it.  But it preserves
 # work I like done by somebody I like.
-alias mirrorboard='xkbcomp ~/bin/mirrorboard.xkb $DISPLAY 2>/dev/null'
+alias mirrorboard='xkbcomp ~/mirrorboard.xkb $DISPLAY 2>/dev/null'
 
 alias calc='autoload zcalc && zcalc'
 
@@ -240,11 +210,12 @@ alias ff=rifle
 # List monospaced fonts installed on the system
 alias monofonts='fc-list :mono family'
 
-# Run the last command again, running output through less
-#   NOTE:  The space before this command causes zsh to elide adding the command
-#   to the history.  This is handy when repeating 'lass'.  Without the space,
-#   it reruns the last invocation of itself, which is generally not what we
-#   want.
+# Re-run the last command, this time putting output into `less`
+#
+#   NOTE:  The command has a space a the first character. This causes zsh to
+#   elide adding the command to the history.  This is handy when running 'lass'
+#   multiple times.  Without the space, it reruns the prior invocation of
+#   'lass' itself, which is generally not what we want.
 alias lass=' less =($(history -n -1))'
 
 #############################################
@@ -256,7 +227,7 @@ alias random-wikipedia-article='www-browser ''https://en.wikipedia.org/wiki/Spec
 
 # Just so I don't have to look up the particular characters for this one.
 #   (It seems as though there should be some sort of digraph-like functionality to do this in vim.)
-alias shrug="echo '¯\_(ツ)_/¯'"
+alias shrug="print '¯\_(ツ)_/¯'"
 
 # System Shock was downloaded via Steam, but apparently it must be run directly
 # from this directory, or it throws a weird error and crashes..
@@ -284,8 +255,8 @@ alias qp='process-query'
 alias j=jot
 
 # bat is supposed to be a better substitute for cat
-# alias cat=bat
-
+alias cat=bat
+alias b=bat
 #####################################################
 # FOR FUN
 #
@@ -300,3 +271,4 @@ alias xyzzy='echo Nothing happens.'
 
 alias e=env
 
+alias tml='tmux list-sessions'
