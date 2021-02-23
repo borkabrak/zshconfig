@@ -597,8 +597,12 @@ function tm() {
     # 'cd' -> change directory for new windows.
     cd)
       defaultinput=$(pwd)
+
+      # if we have more arguments beyond 'cd'..
       if [[ $#argv -gt 1 ]]
       then
+
+          # ..make sure the directory exists and is a directory
           if [[ -d $argv[2] ]]
           then
               defaultinput=$argv[2]
