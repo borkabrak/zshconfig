@@ -582,17 +582,17 @@ function tm() {
     # 'ls' -> 'list-session'
     ls)
       argv[1]='list-sessions'
-      ;;
+    ;;
 
     keys)
       argv[1]='list-keys'
-      ;;
+    ;;
 
     # Anything starting with 'a' means 'attach-session'
     a*)
       shift
       argv=('attach-session' '-t' $argv)
-      ;;
+    ;;
 
     # 'cd' -> change directory for new windows.
     cd)
@@ -613,7 +613,7 @@ function tm() {
 
       # This wipes out any further args passed in, but I'm not sure how those could mean anything, anyway.
       argv=("command-prompt" -I $defaultinput -p "Change tmux's working directory to:" "attach -c %1")
-      ;;
+    ;;
 
   esac
 
