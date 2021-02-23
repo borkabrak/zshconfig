@@ -558,3 +558,14 @@ function inode() {
   }
 
 }
+
+
+######################################################
+# Show all uncommented lines in the input
+######################################################
+# For now, a commented line is one in which the first non-whitespace character
+# is something other than a hash (#) or a double slash (//).  Blank lines are
+# also omitted from output.
+function uncommented-lines() {
+  env grep -P -v '^\s*(#|//|$)' $argv
+}
