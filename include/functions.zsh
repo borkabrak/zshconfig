@@ -623,8 +623,8 @@ function tm() {
 
   esac
 
-  # Show new argv
-  print -n "ARGV: |"; for param in $argv; { print -n -- "$param|" }; print "\n"
+  # Show final command as run
+  print -P "%F{69}⮞%f %F{29}tmux $argv%f\n"
 
   # Finally, run tmux with new argument list
   tmux $argv
