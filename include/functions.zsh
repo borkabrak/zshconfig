@@ -576,37 +576,43 @@ function uncommented-lines() {
 ######################################################
 function tm() {
 
+  # Use a clean array for the new argument list
+  newargs=()
+
   # Check for shortcut abbreviations
   case $argv[1] in
 
     # 'ls' -> 'list-session'
     ls)
-      argv[1]='list-sessions'
+      newargs[1]='list-sessions'
       ;;
 
     keys)
-      argv[1]='list-keys'
+      newargs[1]='list-keys'
       ;;
 
     # Anything starting with 'a' means 'attach-session'
     #
     #     $ tm a <sessionname>    # attach to a specific session
     a*)
-      shift
 
       # If we have a session name, use it with '-t', the way tmux expects
-      if [[ $#argv -gt 0 ]] {
-        argv=('attach-session' '-t' $argv[1])
+      if [[ $#argv -gt 1 ]] {
+
+        newargs=('attach-session' '-t' $argv[2])
+
       } else {
+
         # If no session name is given, this will attach to a single existing session
-        argv+=('attach-session')
+        newargs+=('attach-session')
+
       }
       ;;
 
     # 'cw' -> 'choose-window'
     # Requires tmux version >2.1, <=3.3
     cw)
-      argv[1]='choose-window'
+      newargs[1]='choose-window'
       ;;
 
     # 'cd' -> change directory for new windows.
@@ -627,14 +633,14 @@ function tm() {
       fi
 
       # This wipes out any further args passed in, but I'm not sure how those could mean anything, anyway.
-      argv=("command-prompt" -I $defaultinput -p "Change tmux's working directory to:" "attach -c %1")
+      newargs=("command-prompt" -I $defaultinput -p "Change tmux's working directory to:" "attach -c %1")
       ;;
 
   esac
 
-  # Show final command as run
-  print -P "%F{69}⮞%f %F{29}tmux $argv%f\n"
+  # Show final command as it will be run
+  print -P "%F{69}⮞%f %F{29}tmux $newargs%f\n"
 
   # Finally, run tmux with new argument list
-  tmux $argv
+  tmux $newargs
 }
