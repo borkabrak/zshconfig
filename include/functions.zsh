@@ -589,9 +589,18 @@ function tm() {
       ;;
 
     # Anything starting with 'a' means 'attach-session'
+    #
+    #     $ tm a <sessionname>    # attach to a specific session
     a*)
       shift
-      argv=('attach-session' '-t' $argv)
+
+      # If we have a session name, use it with '-t', the way tmux expects
+      if [[ $#argv -gt 0 ]] {
+        argv=('attach-session' '-t' $argv[1])
+      } else {
+        # If no session name is given, this will attach to a single existing session
+        argv+=('attach-session')
+      }
       ;;
 
     # 'cw' -> 'choose-window'
