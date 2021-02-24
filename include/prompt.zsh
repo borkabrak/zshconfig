@@ -8,12 +8,15 @@
 # by searching for EXPANSION OF PROMPT SEQUENCES in `man zshmisc`.  You can get
 # the `print` command to use these special rules as well by giving it the -P
 # option.  (get colors without autoload!)  `echo` won't do that, if you're
-# looking for differences.
+# looking for differences. :)
 #
-# • Dynamic information in the prompt (stuff that may change in between
-# displays of the prompt.  i.e., time.) can be done with the special hook
-# function 'precmd()'.  ZSH also provides an array, 'psvar', that can be used
-# to set the prompt dynamically.  
+# • Dynamic information in the prompt (anything that may change in between
+# displays of the prompt, such as the current time) can be handled with the
+# special hook function 'precmd()'. precmd() is run just before every time the
+# prompt is displayed, giving you a chance to make sure it's up-to-date.
+#
+# ZSH also provides an array, 'psvar', that can be used to set the prompt
+# dynamically.
 ##############################################################################
 # 
 #-------------------------------------------------------------------------------------
