@@ -594,6 +594,12 @@ function tm() {
       argv=('attach-session' '-t' $argv)
       ;;
 
+    # 'cw' -> 'choose-window'
+    # Requires tmux version >2.1, <=3.3
+    cw)
+      argv[1]='choose-window'
+      ;;
+
     # 'cd' -> change directory for new windows.
     cd)
       defaultinput=$(pwd)
