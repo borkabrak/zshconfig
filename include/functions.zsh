@@ -587,9 +587,11 @@ function tm() {
       newargs[1]='list-sessions'
       ;;
 
+
     keys)
       newargs[1]='list-keys'
       ;;
+
 
     # Anything starting with 'a' means 'attach-session'
     #
@@ -609,11 +611,13 @@ function tm() {
       }
       ;;
 
+
     # 'cw' -> 'choose-window'
     # Requires tmux version >2.1, <=3.3
     cw)
       newargs[1]='choose-window'
       ;;
+
 
     # 'cd' -> change directory for new windows.
     cd)
@@ -635,6 +639,12 @@ function tm() {
       # This wipes out any further args passed in, but I'm not sure how those could mean anything, anyway.
       newargs=("command-prompt" -I $defaultinput -p "Change tmux's working directory to:" "attach -c %1")
       ;;
+
+
+    # Default case - nothing matched, so go ahead with argument as given
+    *)
+      newargs=$argv
+
 
   esac
 
