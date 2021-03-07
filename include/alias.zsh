@@ -143,19 +143,17 @@ alias calc='autoload zcalc && zcalc'
 # ..means that the command 'anything.ext' is replaced with 'prog anything.ext'.
 # More at `man zshbuiltins`.
 
-alias -s txt=less
+alias -s txt=bat
 alias -s cfg=less
 alias -s conf=less
 alias -s log=less
 alias -s mkd=less
 
-alias -s zsh=vim
-alias -s rb=vim
-alias -s py=vim
-
 alias -s ts=tsc
 alias -s js=nodejs
 alias -s pdf=xreader
+
+alias -s html=www-browser
 ###############################################################################
 
 

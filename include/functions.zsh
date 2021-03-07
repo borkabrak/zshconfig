@@ -595,6 +595,12 @@ function tm() {
       newargs[1]='choose-window'
       ;;
 
+    # 'ns' -> 'new-session'
+    # Requires tmux version >2.1, <=3.3
+    ns)
+      newargs[1]='new-session'
+      ;;
+
 
     # 'cd' -> change directory for new windows.
     cd)
@@ -617,10 +623,23 @@ function tm() {
       newargs=("command-prompt" -I $defaultinput -p "Change tmux's working directory to:" "attach -c %1")
       ;;
 
+    # 'log' -> toggle logging.
+    #
+    #   Log file is at ~/tmux-server-$PID.log
+    #   Default is off - tmux normally does not log events.
+    #
+    #   Note that logging is quite verbose.  When on, tmux seems to add
+    #   something on the order of 1000 lines per second.
+    log)
+      # Logging in a running tmux server is toggled by sending it the USR2 signal.
+      kill -usr2 $(pgrep tmux)
+      return 0
+      ;;
 
-    # Default case - nothing matched, so go ahead with argument as given
+
+    # Default case - nothing matched, so go ahead with arguments as given
     *)
-      newargs=$argv
+      newargs=($argv)
 
 
   esac
@@ -630,4 +649,123 @@ function tm() {
 
   # Finally, run tmux with new argument list
   tmux $newargs
+}
+
+# in-progress: monitor battery charging status for when you have a flaky power
+# plug that needs repair
+function battery-monitor() {
+  while true;
+  do
+
+    acpi
+    sleep 1;
+    clear;
+
+  done
+}
+
+# manshort() <topic> [n]
+# Print just the first [n] sections of the man page about <topic>.  Default for
+# [n] is 2.
+function manshort() {
+
+  if [[ $#argv == 0 ]] {
+    print -P "
+    %F{69}$0%f
+
+      Print the first few sections of a man page.
+
+    %F{69}USAGE%f
+
+      %F{69}\$ %F{29}$0 <manpage> <sectioncount>%f
+
+      manpage - The man page to display.
+
+      sectioncount - Number of sections to display.  Default 2.
+
+    %F{69}EXAMPLE%f
+
+      %F{69}\$ %F{29}$0 ls 3%f
+
+      Print the first 3 sections of the man page for the 'ls' command.
+
+    "
+
+    return 1
+
+  }
+
+  topic=$argv[1]
+
+  sectioncount=2
+  if [[ $#argv -gt 1 ]] {
+    sectioncount=$argv[2]
+  }
+
+  man $(basename $topic) 2>/dev/null |
+    awk "
+
+      # How many sections do we print?
+      BEGIN {
+        sectioncount=$sectioncount
+      }
+
+      # Count sections by watching for the section header (non-whitespace in first column).
+      /^[^[:space:]]/ {
+        currentsection++
+      };
+
+      # Quit processing the file when a particular section count is reached
+      currentsection > (sectioncount + 1) {
+        exit
+      };
+
+      { print }
+
+    ";
+}
+
+
+# Run a command every <x> seconds
+function every() {
+
+  if [[ $#argv == 0 ]] {
+
+    print -P "
+    %F{69}$0%f
+
+      Run a command every <x> seconds
+
+    %F{69}USAGE%f
+
+      %F{69}\$ %F{29}$0 <duration> <command>%f
+
+      duration  - The number of seconds to wait between invocations of the
+                  command.
+
+      command   - The command to run.  Whitespace should be escaped or the
+                  command surrounded in quotes.
+
+    %F{69}EXAMPLE%f
+
+      %F{69}\$ %F{29}$0 3 \"date -R\"%f
+
+      Every 3 seconds, output the date in RFC2822 format.
+
+    "
+
+    return 1
+
+  }
+
+  delay=$argv[1]
+  command=$argv[2]
+
+  while true; do
+
+    eval $command
+
+    sleep $delay
+
+  done
 }

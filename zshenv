@@ -41,6 +41,15 @@ PAGER=less
 # seems to require 'echoti colors' to report 256.  Setting TERM here makes that happen.
 #
 # So, while setting this here seems to fix the issue, it all feels a touch hacky.. 
+#
+# Okay, so it appears that the problem can be fixed within tmux (the only place
+# I've seen it appear) by setting the 'default-terminal' option to
+# "xterm-256color".  But the man page for tmux says that the option MUST be
+# "screen", "tmux", or a derivative of them, so trying "tmux-256color" also
+# seemed to work.  I still don't like that I don't really understand the issue,
+# but it's doing what I want for the nonce, so.. okay?
+#
+# ..and not setting it here leaves the virtual terminals using only 8 colors.  Oh, well.
 TERM=xterm-256color
 
 # HISTORY
@@ -72,4 +81,4 @@ hr="============================================================================
 #   might need in *it's* environment.  For example, EDITOR has consequences
 #   affecting the default keymap for the command line editor.
 #   
-export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST TERM
+export PATH EDITOR PAGER HISTFILE HISTSIZE SAVEHIST #TERM

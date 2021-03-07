@@ -38,7 +38,7 @@
 
 
 # Print a symbol to represent the state of power to the system
-function get_power_state_symbol() {
+function power_state_symbol() {
   if [[ $(acpi -a) =~ "on-line" ]] { 
     print "%F{10}🔌 %f"  # Power adapter is plugged in
     } else { 
@@ -85,7 +85,8 @@ function battery_capacity() {
 }
 
 # precmd(): A special function that ZSH runs automatically before each display
-# of the prompt.
+# of the prompt.  This allows us to keep up-to-date any information presented
+# in the prompt.
 function precmd() {
 
                            user="%F{ 10}%n%f"
@@ -94,10 +95,9 @@ function precmd() {
                             sep="%F{ 87}:%f"
               current_directory="%F{ 12}%~%f"
                           arrow="%F{ 13}➤%f"
-  current_directory_entry_count="🗁 %F{141}$(printf '%3s' $(ls | wc -l))%f"    # ⎹⎸
-
+  current_directory_entry_count="🗁 %F{141}$(printf '%3s' $(ls | wc -l))%f"
                            time="%S%F{141}$(date +'%l:%M%p %S"')%s%f"
-                        battery="$(get_power_state_symbol)$(battery_capacity $(battery-percent))"
+                        battery="$(power_state_symbol)$(battery_capacity $(battery-percent))"
                             tty="%F{87}$(tty)%f"
 
   ###############################################################################################
@@ -107,7 +107,8 @@ function precmd() {
   ###############################################################################################
   
   ###################################
-  # 'Right' prompt
+  # 'Right' prompt - right justified and automatically vanishes to make room
+  # for long commands.
   #----------------
   RPROMPT="${battery} ${current_directory_entry_count} ${tty} ${time}"
   ###################################
