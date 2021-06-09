@@ -289,11 +289,19 @@ function process-query() {
     DESCRIPTION
       Print all currently running processes matching <pattern> and a summary
       count of how many there are.
+
+      Accepts multiple patterns at a time.
     "
     return 1
   }
-	pgrep -fa $1
-	print -P "===\n%F{13}$(pgrep -fc $1)%f processes matching '%F{10}$1%f'"
+
+  for param in $@; {
+
+    pgrep -fa $param
+    print -P "%F{13}$(pgrep -fc $param)%f currently running processes match '%F{10}$param%f'."
+
+  }
+
 }
 
 
@@ -323,8 +331,9 @@ function colortable {
   separator=" "   # │ | :
 
 
-  # ${1-16} means return $1 or, if $1 is not set, return 16.  In other words,
-  # set this to the param passed to this function or default to 16.
+  # ${1-16} means use the value of $1 or, if $1 is not set, use the literal
+  # value '16'.  In other words, set this to the param passed to this function
+  # or default to 16.
   entries_per_line=${1-16}
   # NOTE: Using 36 entries per line (with a small enough font to get a whole
   # row on the screen) shows an effect I don't quite understand.  Like
@@ -553,6 +562,8 @@ function uncommented-lines() {
 ######################################################
 function tm() {
 
+  #TODO: 'help|usage' subcommand
+
   # Use a clean array for the new argument list
   newargs=()
 
@@ -560,19 +571,30 @@ function tm() {
   case $argv[1] in
 
     # 'ls' -> 'list-session'
-    ls)
-      newargs[1]='list-sessions'
-      ;;
+    # ls)
+    #   newargs[1]='list-sessions'
+    #   ;;
 
-
-    keys)
+    # 'key*' -> 'list-keys'
+    key*)
       newargs[1]='list-keys'
       ;;
 
 
-    # Anything starting with 'a' means 'attach-session'
+    # 'nw' -> 'new-window'
+    nw)
+      newargs[1]='new-window'
+      ;;
+
+
+    # 'a*' -> 'attach-session'
+    # (Anything starting with 'a' means 'attach-session')
     #
-    #     $ tm a <sessionname>    # attach to a specific session
+    #     $ tm a <sessionname>    # attach to the session named <sessionname>
+    #
+    #     NOTE:  This may seem like an aggresive abbreviation, but tmux itself
+    #     provides no subcommands that begin with 'a' other than
+    #     'attach-session'.
     a*)
 
       # If we have a session name, use it with '-t', the way tmux expects
@@ -599,18 +621,24 @@ function tm() {
     # Requires tmux version >2.1, <=3.3
     ns)
       newargs[1]='new-session'
+
+      # If there's another arg, use it as the name of the new session
+      if [[ $#argv -gt 1 ]]
+      then
+        newargs+=('-s' $argv[2]);
+      fi
       ;;
 
 
-    # 'cd' -> change directory for new windows.
+    # 'cd' -> change the starting directory for new windows
     cd)
       defaultinput=$(pwd)
 
-      # if we have more arguments beyond 'cd'..
+      # Anything following 'cd' is presumably the directory to use..
       if [[ $#argv -gt 1 ]]
       then
 
-          # ..make sure the directory exists and is a directory
+          # ..but make sure the directory exists
           if [[ -d $argv[2] ]]
           then
               defaultinput=$argv[2]
@@ -619,21 +647,21 @@ function tm() {
           fi
       fi
 
-      # This wipes out any further args passed in, but I'm not sure how those could mean anything, anyway.
+      # Any args following the directory name get wiped out, but I can't think what we'd want them for
       newargs=("command-prompt" -I $defaultinput -p "Change tmux's working directory to:" "attach -c %1")
       ;;
 
     # 'log' -> toggle logging.
     #
     #   Log file is at ~/tmux-server-$PID.log
-    #   Default is off - tmux normally does not log events.
+    #   Default is off - tmux normally does not log events.  Probably because..
     #
-    #   Note that logging is quite verbose.  When on, tmux seems to add
+    #   NOTE: ..tmux logging is QUITE verbose.  When active, tmux seems to add
     #   something on the order of 1000 lines per second.
-    log)
-      # Logging in a running tmux server is toggled by sending it the USR2 signal.
+    lg|log)
+      # Logging in a running tmux server is toggled by sending the USR2 signal to the tmux process.
       kill -usr2 $(pgrep tmux)
-      return 0
+      return 0  # This doesn't need a 'tmux' command, so we exit early
       ;;
 
 
@@ -644,10 +672,11 @@ function tm() {
 
   esac
 
+
   # Show final command as it will be run
   print -P "%F{69}⮞%f %F{29}tmux $newargs%f\n"
 
-  # Finally, run tmux with new argument list
+  # Finally, run tmux with the new argument list
   tmux $newargs
 }
 
@@ -664,9 +693,7 @@ function battery-monitor() {
   done
 }
 
-# manshort() <topic> [n]
-# Print just the first [n] sections of the man page about <topic>.  Default for
-# [n] is 2.
+# Print just the first [n] sections of the man page about <topic>.
 function manshort() {
 
   if [[ $#argv == 0 ]] {
@@ -725,14 +752,57 @@ function manshort() {
     ";
 }
 
-
-# Run a command every <x> seconds
-function every() {
+function manopts() {
 
   if [[ $#argv == 0 ]] {
 
     print -P "
-    %F{69}$0%f
+    $0: List the options for a command.
+
+    USAGE: $0 <manpage>
+
+    NOTE:  This is a brainless little function that really just shows all the
+    lines from the command's man page that start with a dash (As well as the
+    line following).  It's ad-hoc, slapdash, and is always sick at sea.  It
+    would be laughably naive to bet anything important on it being either
+    accurate or complete.
+    "
+    return 1
+
+  }
+
+  man $argv[1] | grep -P "^\s*-" -A 2 | less
+
+}
+
+# usage() is a utility function intended to streamline the delivery of friendly,
+# attractive messages to help the user invoke these functions correctly.
+# usage() is intended as an aid for writing other functions, rather than a
+# standalone end-user tool.
+#
+# USAGE: usage $usagetext $errormessage
+#
+#   $usagetext - a block of text describing the general usage of the function
+#
+#   $errormessage - an optional message indicating the specific error condition that prompted this invocation of usage()
+#
+# For an example, take a look at every()
+function usage() {
+
+    if [[ $#argv -gt 1 ]] { print -P "\n%F{220}$funcstack[2]():$argv[2]%f" }
+
+    print -P "$argv[1]"
+
+    return 1
+}
+
+# Run a command every <x> seconds
+function every() {
+
+    usagetext="
+    %F{69}NAME%f
+
+      %F{29}$0()%f
 
       Run a command every <x> seconds
 
@@ -753,12 +823,23 @@ function every() {
       Every 3 seconds, output the date in RFC2822 format.
 
     "
-
+# Audit parameters..
+  if [[ $#argv -eq 0 ]] {
+    usage $usagetext
     return 1
+  }
 
+  if [[ $#argv -ne 2 ]] {
+    usage $usagetext "There should be exactly 2 params"
+    return 1
   }
 
   delay=$argv[1]
+  if [[ ! $delay == [0-9]* ]] {
+    usage $usagetext "'$delay' does not seem to be an integer"
+    return 1
+  }
+
   command=$argv[2]
 
   while true; do

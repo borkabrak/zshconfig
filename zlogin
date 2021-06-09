@@ -1,7 +1,7 @@
 print "Greetings, sir.  It's wonderful to have you back."
 
 # Some things I might want to be reminded about..
-task list
+# task list
 print "=============================================================================="
 #jot
 
@@ -23,11 +23,10 @@ setxkbmap -option # Start by clearing any extant setxkbmap options
 # setxkbmap -option caps:ctrl_modifier
 setxkbmap -option caps:escape
 setxkbmap -option shift:both_capslock
+# setxkbmap -query
 
-setxkbmap -query
 print "
   CapsLock = Escape
   Escape   = Escape
-
   To lock caps, use both shift keys.
 "

@@ -5,9 +5,11 @@
 #   Environment variables (often called 'params' in the zsh documentation.)
 #
 ###########################################################################
-
 # Add a bin in my home dir, for my own scripts
 PATH=$PATH:~/bin
+
+# More easily run AppImage files.
+PATH=$PATH:~/appimage
 
 # The EDITOR param can have non-obvious consequences.  From the KEYMAPS section
 # of `man zshzle`, when discussing the default keymap:

@@ -14,14 +14,18 @@ unalias -as # remove suffix aliases
 ########################################################################################################
 #
 #   This section is for aliases that copy a normal command, adding options that
-#   you almost always want to use.  'cp -i', for example, will make it always
-#   ask before it overwrites a file at the destination.
+#   you almost always want to use. For example:  
+#
+#     $ alias cp='cp -i'
+#
+#   will make it so that `cp` always ask before it overwrites a file at the
+#   destination.
 #
 #   Q: ALMOST always, you say?
 #
 #   A: Right.  Sometimes you really do want to use the soi-disant 'factory
 #   standard' version of a command, without whatever nonsense you've done here
-#   to mess it up. :)  Here's how to do that:
+#   to mess it up. :)  There are at least a couple ways to do that:
 #
 #   Both of the following methods will run the 'real' (unaliased, as-installed)
 #   version of <command>, ignoring any attempts that may have been tried to
@@ -32,9 +36,12 @@ unalias -as # remove suffix aliases
 #     $ /usr/bin/<command>
 #
 #
-#   2.) ..but it's usually simpler to just use the 'env' command:
+#   2.) ..but it's often easier to use the 'env' command:
 #
 #     $ env <command>
+#
+#     For convenience and ease of use, the command 'e' can be aliased to 'env',
+#     as has been done here.
 #
 #
 ########################################################################################################
@@ -53,12 +60,6 @@ alias tree='tree -C' # Colorful tree view
 alias w3m='w3m -B' #   -B: If no argument is given, open w3m on a list of bookmarks
 alias xargs='xargs -r' # Running commands to xargs with nothing on STDIN:  not even once. :-D
 ########################################################################################################
-
-# The w3m package provides a command to easily browse manpages.  I think I much
-# prefer this to man's basic interface.  (Except for marks, dammit.  They're
-# just too useful to give up entirely.)
-alias wman=w3mman
-
 
 # When using whence to learn about a command,
 #   c - csh-style output (seems more complete)
@@ -106,6 +107,11 @@ alias vv='revim'
 alias ucode='unicode --max 0 --brief -r'  
 
 alias whatprovides='apt-file search -x'
+
+# The w3m package, along with the fairly kick-ass web browser/pager basic
+# program, also provides a command to a configuration suitable for manpages.
+alias wman=w3mman
+
 alias x=exit  # So far I've only run this accidentally just a few times.
 
 # Work around a common typo
@@ -204,6 +210,15 @@ alias nvim-log="NVIM_PYTHON_LOG_FILE=~/.vim/nvim-python-log-file.txt nvim"
 alias rr=ranger
 # rifle is a file opener originally made for ranger, but functional as a standalone
 alias ff=rifle
+
+#alias man=w3mman
+
+# List the various sections of the manual, as currently presented in the man
+# page for man itself.
+#
+# NOTE: This is *very* ad-hoc and really just prints all lines starting with
+#       numbers from the first 100 lines of man's man page.  Use gently.
+alias mansections='man man | head -100 | grep -P "^ *\d"'
 
 # List monospaced fonts installed on the system
 alias monofonts='fc-list :mono family'
