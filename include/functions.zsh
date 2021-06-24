@@ -95,6 +95,7 @@ function countdown() {
   duration=$@[$#]
   if ! [[ $duration =~ '^[0-9]+$' ]]; then
     print "'$duration' is not an integer. The countdown duration must be the last argument given"
+    usage $0
     return
   fi
 
@@ -111,6 +112,7 @@ function countdown() {
 
 function parseopts() {
 # For debugging.  Practice parsing options
+# For more examples, check out countdown()
 
     print "==[ $(date) ]=="
     typeset -a opts;
@@ -131,6 +133,8 @@ function parseopts() {
 
 function tracelink() {
 # Show each step in a chain of symbolic links
+#
+# Actually.. sorry, self, but 'whence' has options that do this, probably better..
 
     # With no args, just show usage
     if [[ ! $# > 0 ]]; then
@@ -297,8 +301,9 @@ function process-query() {
 
   for param in $@; {
 
+    print -P "[ %F{13}$(pgrep -fc $param)%f ] currently running processes match '%F{10}$param%f':"
     pgrep -fa $param
-    print -P "%F{13}$(pgrep -fc $param)%f currently running processes match '%F{10}$param%f'."
+    print
 
   }
 
@@ -306,7 +311,8 @@ function process-query() {
 
 
 function rand() {
-# Print a random number between 0 and a given param (minus one)
+# Print a random number between 0 and a given param (non-inclusive;  that is,
+# 'rand 2' prints either 0 or 1 - never 2)
 # If no param is given, then just print $RANDOM
 
   #cf: `man zshparam /RANDOM`, `man zshexpn /PARAMETER EXPANSION`
@@ -417,19 +423,6 @@ function cd-phone-comics() {
 
 function cd-phone-sdcard() {
   cd /run/user/$UID/gvfs/mtp*/SD*/
-}
-
-
-###############################################################################
-
-# Show the largest $1 directories in the current location
-function showlargest() {
-
-  # first argument: how many to show.  Default to 10.
-  count=${1-10}
-
-  # 1048576 = 1024 * 1024 (Converts bytes to GB)
-  du * | sort -rn | head -$count | awk '{print ($1 / 1048576 ) "GB", $0}'
 }
 
 
@@ -849,4 +842,17 @@ function every() {
     sleep $delay
 
   done
+}
+
+# Print just the names of all loaded functions (the zsh builtin command
+# 'functions' prints the entire function body as well)
+function functionnames() {
+  functions | grep '^[^} 	]' | awk '{print $1}'
+}
+
+# Show directories in the current location sorted by size *of their contents*
+# (`ls -S` seems to just show the size of the directory inode itself -- 4K for
+# every one.)
+function sizes() {
+  du -hd0 */ | sort -hr
 }

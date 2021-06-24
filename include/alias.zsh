@@ -5,7 +5,7 @@
 ########################################################################################################
 
 # First, remove all existing aliases. Necessary to get a clean slate when, say,
-# changing something in this file and re-sourcing zshrc from an existing shell.
+# changing something in this file and re-sourcing it from an existing shell.
 unalias -a  # remove normal aliases
 unalias -as # remove suffix aliases
 
@@ -57,19 +57,20 @@ alias mv='mv -i'
 alias rm='rm -I'
 alias tmux='tmux -2 -u' # Run tmux with 256-color and UTF-8 support
 alias tree='tree -C' # Colorful tree view
-alias w3m='w3m -B' #   -B: If no argument is given, open w3m on a list of bookmarks
+alias w3m='w3m -B' #   -B: If no argument is given, open w3m on its list of saved bookmarks
 alias xargs='xargs -r' # Running commands to xargs with nothing on STDIN:  not even once. :-D
 ########################################################################################################
 
 # When using whence to learn about a command,
 #   c - csh-style output (seems more complete)
 #   v - more verbose output
-#   a - show all occurences
+#   a - show all occurences of the target command
 #   f - if it's a function, show its source code
 #   S - if it's a symlink, show all the links until its final resolution
 #   m - take arguments to be regex patterns and output all matching commands
-#       (usually doesn't do anything unless wildcards are used.)
-#   x4 - when printing functions, use a 4-space tabstop
+#       (usually doesn't do anything unless wildcards are used in the target
+#       specification.)
+#   x4 - when printing functions, use a 4-space tab width
 alias wh='whence -cvafSmx4'
 
 
