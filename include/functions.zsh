@@ -332,7 +332,7 @@ function hotrod() {
 # Print a compact table of which numbers produce which colors.
 # This is helpful for using prompt-style color output a la:
 #     %F{color/number}colored text%f
-function colortable {
+function colortable() {
 
   separator=" "   # │ | :
 
@@ -367,7 +367,7 @@ function colortable {
 
 
 # Print a sizeable bit of text showing number/color correspondence
-function colorlist {
+function colorlist() {
   for i in {0..255}; {
     print -P "%F{$i}This is color $i."
   } | less -R
@@ -483,7 +483,7 @@ function markdown-read() {
 
 
 # Output the integer percentage of battery charge.
-function battery-percent {
+function battery-percent() {
   acpi -b | head -1 | perl -pe 's/.*?(\d+)%.*/\1/i'
 }
 
