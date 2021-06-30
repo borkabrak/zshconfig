@@ -427,9 +427,29 @@ function cd-phone-sdcard() {
 
 
 # Print something to the screen and run it through a speech synthesizer
-function speak {
-  print $argv
-  espeak "$argv" & # throw it in the background so we don't wait on a potentially long speech
+function say() {
+
+  # `speak stop` stops all running espeak processes
+  if [[ $argv[1] == "stop" ]] {
+    pkill espeak
+    return
+  }
+
+  if [[ -f $argv[1] && $#argv -lt 2 ]] {
+
+    cat $argv[1]
+
+    # throw it in the background so we don't get hung up waiting on a
+    # potentially long speech
+    espeak -f $argv[1] &
+
+  } else {
+
+    print $argv
+    espeak "$argv" &
+
+  }
+
 }
 
 
