@@ -256,7 +256,6 @@ alias shh=suspend-to-memory
 alias sleepytime=suspend-to-memory
 alias goodnight=suspend-to-memory
 
-alias say='print'
 alias p='print'
 
 # shortcut to a script I wrote to show count and names of processes that match
